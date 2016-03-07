@@ -31,7 +31,7 @@ load_data <- function(path){
       return(d)
 }
 
-files <- list.files("raw_data/census/tornado_wind_hail", pattern="\\.csv", full.names=T)
+files <- list.files("raw_data/tornado_wind_hail", pattern="\\.csv", full.names=T)
 d <- lapply(files, load_data)
 names(d) <- c("tornado", "hail", "wind")
 
