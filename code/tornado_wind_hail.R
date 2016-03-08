@@ -15,7 +15,10 @@ library(maptools)
 library(viridis)
 
 
-############ load storms data ##############
+
+####### functions #######
+
+# load storms data
 # metadata is at http://www.spc.noaa.gov/wcm/data/SPC_severe_database_description.pdf
 # column names are common to all weather types, but wind has an extra variable
 load_data <- function(path){
@@ -31,47 +34,36 @@ load_data <- function(path){
       return(d)
 }
 
-files <- list.files("raw_data/tornado_wind_hail", pattern="\\.csv", full.names=T)
-d <- lapply(files, load_data)
-names(d) <- c("tornado", "hail", "wind")
 
-
-############ load US counties shapefile ############
-counties <- readOGR("raw_data/census/us_counties_shapefile", "cb_2014_us_county_500k")
-counties <- crop(counties, extent(-126, -59, 22, 53)) # crop to US48
-counties$area <- gArea(counties, byid=T) # calculate area per county
-
-
-############ tabulate weather events per county and join to shapefile data ############
+# tabulate weather events per county
 countify <- function(data){
-      
-      # spatial bookkeeping
-      coordinates(data) <- c("slon", "slat")
-      crs(data) <- crs(counties)
-      
-      # calculate events per county
-      o <- over(data, counties) %>% # actually this spatially explicit query isn't strictly necessary, could just join on fips. that would be the approach for crop damage etc
-            group_by(GEOID) %>%
+      require(stringr)
+      data <- data %>%
+            mutate(state_fips = str_pad(state_fips, 2, "left", "0"),
+                   county_fips = str_pad(county_fips_1, 3, "left", "0")) %>%
+            group_by(state_fips, county_fips) %>%
             summarize(n_storms=n(),
-                      area=mean(area, na.rm=T))
-      
-      # join point and polygon datasets
-      data <- counties
-      data <- tidy(data, region="GEOID")
-      data <- left_join(data, o, by=c("id"="GEOID"))
+                      total_intensity=sum(intensity))
       return(data)
 }
-      
-s <- lapply(d, countify) 
 
 
+# make shapefile from county data table
+geojoin <- function(data, shapefile){
+      #shapefile@data <- mutate_each(shapefile@data, funs(as.integer), STATEFP, COUNTYFP)
+      shapefile@data <- left_join(shapefile@data, data, by=c("STATEFP"="state_fips", "COUNTYFP"="county_fips"))
+      return(shapefile)
+}
 
-############ save some simple maps ###########
 
+# save simple maps
 make_map <- function(weather){
-      f <- s[[weather]]
-      png(paste0("output/", weather, "_frequency_map.png"), width=3000, height=2000)
-      p <- ggplot(f, aes(long, lat, fill=n_storms/area, group=group, order=order)) + 
+      f <- d[[weather]]
+      s <- tidy(f, region="GEOID")
+      s <- left_join(s, f@data, by=c("id"="GEOID"))
+      
+      png(paste0("output/charts/", weather, "_frequency_map.png"), width=3000, height=2000)
+      p <- ggplot(s, aes(long, lat, fill=n_storms/area, group=group, order=order)) + 
             geom_polygon(color=NA) +
             scale_fill_viridis(option="A", na.value="black",
                                         trans="log10", breaks=10^(0:10)) +
@@ -85,5 +77,25 @@ make_map <- function(weather){
       dev.off()
 }
 
-lapply(names(s), make_map)
+
+######## data setup #########
+
+# load US counties shapefile
+counties <- readOGR("raw_data/census/us_counties_shapefile", "cb_2014_us_county_500k")
+counties <- crop(counties, extent(-126, -59, 22, 53)) # crop to US48
+counties$area <- gArea(counties, byid=T) # calculate area per county
+
+# load weather event data
+files <- list.files("raw_data/tornado_wind_hail", pattern="\\.csv", full.names=T)
+names(files) <- c("tornado", "hail", "wind")
+
+
+
+####### processing ##########
+
+d <- lapply(files, load_data)
+d <- lapply(d, countify)
+for(w in names(d)) write.csv(d[[w]], paste0("output/tidy_county_data/", w, ".csv"), row.names=F)
+d <- lapply(d, geojoin, shapefile=counties)
+lapply(names(d), make_map)
 
