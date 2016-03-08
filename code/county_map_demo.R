@@ -29,8 +29,8 @@ counties@data <- left_join(counties@data, d,
 
 # plot a map
 variable <- "n_storms" # the variable you want to map
-values <- counties@data[,variable]
-values <- log(values) # i'm using a log transformation here due to the tornado frequency distribution
+values <- counties@data[,variable] / counties$area
+values <- log10(values) # i'm using a log transformation here due to the tornado frequency distribution
 colors <- colorRampPalette(c("darkblue", "darkmagenta", "red", "yellow"))(100)[cut(values, breaks=100)]
 colors[is.na(colors)] <- "darkblue" # what color to use for counties with no data -- set this to NA if you want them to be white
 plot(counties, col=colors, axes=F, border=F)
