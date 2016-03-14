@@ -24,4 +24,13 @@ for(i in 1:length(tables)) names(tables[[i]])[!grepl("_fips", names(tables[[i]])
 
 # merge datasets
 master <- Reduce(full_join, tables)
+
+# add county area to table
+counties <- readOGR("raw_data/census/us_counties_shapefile", "cb_2014_us_county_500k")
+counties <- crop(counties, extent(-126, -59, 22, 53)) # crop to US48
+counties <- data.frame(state_county_fips=counties$GEOID,
+                       land_area=gArea(counties, byid=T))
+master <- left_join(master, counties)
+
+# export csv
 write.csv(master, "output/master_county_data/master_county_data.csv", row.names=F)
