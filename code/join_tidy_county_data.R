@@ -24,4 +24,4 @@ for(i in 1:length(tables)) names(tables[[i]])[!grepl("_fips", names(tables[[i]])
 
 # merge datasets
 master <- Reduce(full_join, tables)
-
+write.csv(master, "output/master_county_data/master_county_data.csv", row.names=F)
