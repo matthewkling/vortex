@@ -8,7 +8,8 @@ library(maps)
 library(tigris)
 library(stringr) # to pad fips codes
 
-api.key.install(key="550e70d4fc2a461f97ea0a5f1cac71ec2bf3c213")
+#Request your own key easily through census.gov
+#api.key.install(key="yourkeyhere")
 
 
 #states = geo.make(state="*")
