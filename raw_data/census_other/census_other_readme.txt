@@ -31,22 +31,31 @@ write.csv(unemp, "raw_data/census_other/Unemployment.csv")
 #############
 
 #for the PopulationEstimates.csv file
-library(data.table)
-pop2010 <- fread("raw_data/census_other/PopulationEstimates.csv")
-pop2010[1,8] <- ????
-write.csv(pop2010, "output/tidy_county_data/pop2010.csv")
+popest_raw <- read.csv(("raw_data/census_other/PopulationEstimates.csv"))
+
+popest <- subset(poverty_raw,select=c(state_county_fips,POVALL_2014,PCTPOVALL_2014))
+
+write.csv(poverty,"output/tidy_county_data/poverty.csv",row.names = F)
+
+#check <- read.csv("output/tidy_county_data/poverty.csv")
 
 #for the PovertyEstimates.csv file
-library(data.table)
-pov2010 <- fread("raw_data/census_other/PovertyEstimates.csv")
-pov2010[1,8] <- ????
-write.csv(pov2010, "output/tidy_county_data/pov2010.csv")
+poverty_raw <- read.csv(("raw_data/census_other/PovertyEstimates.csv"))
+
+poverty <- subset(poverty_raw,select=c(state_county_fips,POVALL_2014,PCTPOVALL_2014))
+
+write.csv(poverty,"output/tidy_county_data/poverty.csv",row.names = F)
+
+#check <- read.csv("output/tidy_county_data/poverty.csv")
 
 #for the Unemployment.csv file
-library(data.table)
-unemploy2010 <- fread("raw_data/census_other/Unemployment.csv")
-unemploy2010[1,8] <- ????
-write.csv(unemploy2010, "output/tidy_county_data/unemploy2010.csv")
+poverty_raw <- read.csv(("raw_data/census_other/PovertyEstimates.csv"))
+
+poverty <- subset(poverty_raw,select=c(state_county_fips,POVALL_2014,PCTPOVALL_2014))
+
+write.csv(poverty,"output/tidy_county_data/poverty.csv",row.names = F)
+
+#check <- read.csv("output/tidy_county_data/poverty.csv")
 
 
 ######################
