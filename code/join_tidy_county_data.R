@@ -2,6 +2,10 @@
 # merge county-level datasets into a single master table
 
 library(dplyr)
+library(stringr)
+library(rgdal)
+library(raster)
+library(rgeos)
 
 setwd("~/documents/vortex")
 

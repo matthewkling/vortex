@@ -37,6 +37,8 @@ summary(CCbyYR)
 #Export each dataframe in CCbyYR to a csv
 
 CC.df<- do.call("rbind", lapply(CCbyYR, as.data.frame)) 
-write.csv(CC.df, file = "CensusRace.csv")
+
+#write.csv(CC.df, file = "CensusRace.csv")
+write.csv(CC.df[CC.df$YEAR==3,], file = "output/tidy_county_data/CensusRace.csv", row.names=F)
 
 
