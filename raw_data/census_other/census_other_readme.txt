@@ -30,23 +30,49 @@ write.csv(unemp, "raw_data/census_other/Unemployment.csv")
 #Files were then tidied up using the following R code:
 #############
 
-#for the PopulationEstimates.csv file
-library(data.table)
-pop2010 <- fread("raw_data/census_other/PopulationEstimates.csv")
-pop2010[1,8] <- ????
-write.csv(pop2010, "output/tidy_county_data/pop2010.csv")
+##for the PopulationEstimates.csv file
 
-#for the PovertyEstimates.csv file
-library(data.table)
-pov2010 <- fread("raw_data/census_other/PovertyEstimates.csv")
-pov2010[1,8] <- ????
-write.csv(pov2010, "output/tidy_county_data/pov2010.csv")
+popest_raw <- read.csv(("raw_data/census_other/PopulationEstimates.csv"));popest_raw <- popest_raw[,-1]
 
-#for the Unemployment.csv file
-library(data.table)
-unemploy2010 <- fread("raw_data/census_other/Unemployment.csv")
-unemploy2010[1,8] <- ????
-write.csv(unemploy2010, "output/tidy_county_data/unemploy2010.csv")
+popest_2014 <- subset(popest_raw,select=c(state_county_fips,POP_ESTIMATE_2014))
+ 
+
+write.csv(popest_2014,"output/tidy_county_data/pop_total_2014.csv",row.names = F)
+
+#check <- read.csv("output/tidy_county_data/pop_total_2014.csv")
+#head(check)
+
+
+
+##for the PovertyEstimates.csv file
+poverty_raw <- read.csv(("raw_data/census_other/PovertyEstimates.csv"))
+
+poverty_num_2014 <- subset(poverty_raw,select=c(state_county_fips,POVALL_2014))
+                                                
+write.csv(poverty_num_2014,"output/tidy_county_data/poverty_num_2014.csv",row.names = F)
+
+poverty_pct_2014 <- subset(poverty_raw,select=c(state_county_fips,PCTPOVALL_2014))
+
+write.csv(poverty_pct_2014,"output/tidy_county_data/poverty_pct_2014.csv",row.names = F)
+
+#check <- read.csv("output/tidy_county_data/poverty_pct_2014.csv")
+#check2 <- read.csv("output/tidy_county_data/poverty_num_2014.csv")
+#head(check)
+#head(check2)
+
+##for the Unemployment.csv file
+unemp_raw <- read.csv(("raw_data/census_other/Unemployment.csv"));unemp_raw <- unemp_raw[,-1]
+
+unemp_2014 <- subset(unemp_raw,select=c(state_county_fips,Unemployed_2014))
+
+
+write.csv(unemp_2014,"output/tidy_county_data/unemployed_2014.csv",row.names = F)
+
+#check <- read.csv("output/tidy_county_data/unemployed_2014.csv")
+#head(check)
+
+
+
 
 
 ######################
