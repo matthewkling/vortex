@@ -6,7 +6,6 @@
 # set working directory to your local vortex folder
 setwd("C:/Users/Carmen/Dropbox (Stephens Lab)/DS421/Project/vortex")
 
-
 library(raster)
 library(rgdal)
 library(rgeos)
@@ -24,34 +23,42 @@ counties$area <- gArea(counties, byid=T) # calculate area per county
 setwd("C:/Users/Carmen/Dropbox (Stephens Lab)/DS421/Project")
 r <- raster("wfp_2012_classified.txt")
 
-crs(r) #tells you the coordinate reference system 
-crs(counties)
-
 # sync projections
 counties <- spTransform(counties, crs(r)) #better to change counties because transforming a grid degrades the data
-r <- crop(r, counties)
+#r <- crop(r, counties) # time consuming and unnecessary 
 
-# convert raster to points
-r <- as.data.frame(rasterToPoints(r)) # converts raster to points
-coordinates(r) <- c("x", "y") # tells it the data frame is spatial coordinates
-crs(r) <- crs(counties) # remind it of the projection
-
-# spatial join
-o <- over(r, counties) # overlay (in sp package) outputs a data frame with each raster point as a row and all the counties polygon info as columns
-d <- o %>% ## %>% is dplyer syntax, > is a pipe that feeds output of one function into the next one
-      mutate(value = d$bio1) %>% ## mutate creates or changes variables. In this case, creates column in o that's 
-                                  ## the same as variable of interest in d, replace with risk variable
-      group_by(GEOID) %>% ## GEOID = identifier for county, = county FIP; groupby makes sub data frames for each county
-      summarize(value=mean(value), value2 = length(value[value==2])/length(value)) ## averages by county
-
-# result has a column for GEOID, column for each new variable
-
-counties@data <- left_join(counties@data, d) #combines new county info with original county spatial data frame
+States <- data.frame()
+State.names <- unique(counties$STATEFP)
+for(i in State.names[5:49]) {
+  State <- counties[counties$STATEFP==i,]
+  rState <- crop(r, State)
+  rState <- as.data.frame(rasterToPoints(rState))
+  coordinates(rState) <- c("x", "y")
+  crs(rState) <- crs(State)
+  o <- over(rState, State)
+  d <- o %>%
+    mutate(value = rState$wfp_2012_classified) %>% 
+    group_by(GEOID) %>%
+    summarize(mean_risk = mean(value),
+              max_risk = max(value),
+              risk_1 = length(value[value==1])/length(value),
+              risk_2 = length(value[value==2])/length(value),
+              risk_3 = length(value[value==3])/length(value),
+              risk_4 = length(value[value==4])/length(value),
+              risk_5 = length(value[value==5])/length(value),
+              risk_6 = length(value[value==6])/length(value),
+              risk_7 = length(value[value==7])/length(value))
+  State@data <- left_join(State@data, d)
+  States <- rbind(States, State@data)
+}
+names(States)[1] <- "state_fips"
+names(States)[2] <- "county_fips"
+Fire_Risk_by_County <- States
+write.table(Fire_Risk_by_County,file="States.txt",sep="\t",row.names=TRUE)
 
 # plot a map
-variable <- "value" # the variable you want to map
-values <- counties@data[,variable]
-colors <- colorRampPalette(c("darkblue", "darkmagenta", "red", "yellow"))(100)[cut(values, breaks=100)]
-colors[is.na(colors)] <- "darkblue" # what color to use for counties with no data -- set this to NA if you want them to be white
-plot(counties, col=colors, axes=F, border=F)
-
+#values <- "States$mean_risk" # the variable you want to map
+#values <- counties@data[,variable]
+#colors <- colorRampPalette(c("darkblue", "darkmagenta", "red", "yellow"))(100)[cut(values, breaks=100)]
+#colors[is.na(colors)] <- "darkblue" # what color to use for counties with no data -- set this to NA if you want them to be white
+#plot(counties, col=colors, axes=F, border=F)
