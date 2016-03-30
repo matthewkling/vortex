@@ -8,17 +8,21 @@ select <- dplyr::select
 setwd("~/documents/vortex")
 
 # open master data table
-d <- read.csv("output/master_county_data/master_county_data.csv")
+f <- read.csv("output/master_county_data/master_county_data.csv")
 
-# split into independent and dependent data frames
-race <- d[,grepl("Census|_fips", names(d))]
+
+###### race ######
+
+# split data into race and non-race frames
+race <- f[,grepl("Census|_fips", names(f))]
 names(race) <- sub("CensusRace...", "", names(race))
-d <- d[,!grepl("Census", names(d))]
+d <- f[,!grepl("Census", names(f))]
 
 # variables to visualize
 variables <- names(d)[grepl("\\.\\.\\.", names(d))]
 variables <- variables[!grepl("Fire_risk", variables) | grepl("\\.risk_", variables)] # drop fire metadata variables
 
+# generate an exposure-by-race density plot for all variables
 for(var in variables){
       v <- d[,var]
       if(class(v)=="factor") v <- as.character(v)
@@ -47,8 +51,51 @@ for(var in variables){
                  y="relative proportion of racial group", 
                  title=name,
                  color="race", fill="race")
-      ggsave(paste0("output/charts/exposure_histograms/", var, ".png"), p, width=8, height=6)
-      ggsave(paste0("output/charts/exposure_histograms/", var, "_log10.png"), p+scale_x_log10(), width=8, height=6)
+      ggsave(paste0("output/charts/race_histograms/", var, ".png"), p, width=8, height=6)
+      
+      # log scale
+      ggsave(paste0("output/charts/race_histograms/", var, "_log10.png"), p+scale_x_log10(), width=8, height=6)
 }
 
+
+
+
+##### poverty #####
+
+d <- f
+
+variables <- names(d)[grepl("\\.\\.\\.", names(d))]
+variables <- variables[!grepl("poverty_pct", variables)]
+variables <- variables[!grepl("Fire_risk", variables) | grepl("\\.risk_", variables)] # drop fire metadata variables
+variables <- variables[!grepl("CensusRace", variables)]
+
+pov <- select(d, poverty_pct_2014...PCTPOVALL_2014, CensusRace...TOT_POP)
+names(pov) <- c("pov", "pop")
+
+# generate an exposure-by-race density plot for all variables
+for(var in variables){
+      v <- d[,var]
+      if(class(v)=="factor") v <- as.character(v)
+      v <- as.numeric(v)
+      v <- cbind(pov, v)
+      
+      name <- sub("\\.\\.\\.", ": ", var)
+      colors <- c("darkgoldenrod1", "black", "red", "forestgreen", "dodgerblue")
+      
+      p <- ggplot(v, aes(pov, v, weight=pop, alpha=pop)) +
+            geom_smooth(method=lm, color="darkred", fill="darkred") +
+            geom_point()+
+            theme_minimal() +
+            scale_alpha(trans="log10", range=c(0,1), breaks=10^c(0:10)) +
+            labs(y=name, 
+                 x="percent below poverty line", 
+                 title=name,
+                 alpha="population")
+      ggsave(paste0("output/charts/poverty_scatterplots/", var, ".png"), p, width=8, height=6)
+      
+      # log scale
+      ggsave(paste0("output/charts/poverty_scatterplots/", var, "_log10.png"), 
+             p + scale_y_log10(),
+             width=8, height=6)
+}
 
