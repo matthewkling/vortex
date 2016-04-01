@@ -16,5 +16,12 @@ countydata<- master_county_data[,c("state_fips",
                                    "natural_amenities...Scale"
                                    )]
 countydata$highfirerisk<- master_county_data$Fire_risk_2012...risk_4+master_county_data$Fire_risk_2012...risk_5
-countydata$PercUnempl<- master_county_data$unemployed_2014...Unemployed_2014/master_county_data$CensusRace...TOT_POP
+countydata$PercUnempl<- as.numeric(master_county_data$unemployed_2014...Unemployed_2014)/master_county_data$CensusRace...TOT_POP
 countydata$PercMino<- (master_county_data$CensusRace...TOT_POP - master_county_data$CensusRace...WA)/master_county_data$CensusRace...TOT_POP
+
+
+## temporary fix of NAs##
+countydata<- countydata[1:3142,]
+
+write.csv(countydata, "~/vortex/output/master_county_data/cleanedcounty.csv")
+
