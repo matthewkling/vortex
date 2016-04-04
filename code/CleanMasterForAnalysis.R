@@ -40,4 +40,5 @@ socialdata$PercAI<- master_county_data$CensusRace...IA/master_county_data$Census
 #countydata<- countydata[1:3142,]
 
 write.csv(riskdata, "output/master_county_data/cleanedrisk.csv")
-write.csv(socialdata, "output/master_county_data/cleanedrisk.csv" )
+write.csv(socialdata, "output/master_county_data/cleanedsocial.csv" )
+View(socialdata)
