@@ -1,6 +1,6 @@
 
 # merge county-level datasets into a single master table
-
+install.packages(c("dplyr", "stringr", "rgdal", "raster", "rgeos"))
 library(dplyr)
 library(stringr)
 library(rgdal)

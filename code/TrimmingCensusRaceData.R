@@ -6,7 +6,7 @@
 #COL33 NH_MALE
 #COL34 NH_FEMALE
 
-CC2014 <- read.csv("C:/Users/User1/Desktop/Stat259/vortex/vortex/raw_data/census/CensusRaceEst/CC-EST2014-ALLDATA.csv")
+CC2014 <- read.csv("~/vortex/raw_data/census/CensusRaceEst/CC-EST2014-ALLDATA.csv")
 #for consistency with compiling scripts
 names(CC2014)[2:3]<-c("state_fips", "county_fips")
 
@@ -39,6 +39,6 @@ summary(CCbyYR)
 CC.df<- do.call("rbind", lapply(CCbyYR, as.data.frame)) 
 
 #write.csv(CC.df, file = "CensusRace.csv")
-write.csv(CC.df[CC.df$YEAR==3,], file = "output/tidy_county_data/CensusRace.csv", row.names=F)
+write.csv(CC.df[CC.df$YEAR==7,], file = "~/vortex/output/tidy_county_data/CensusRace.csv", row.names=F)
 
 
