@@ -30,6 +30,13 @@ socialdata<- master_county_data[,c("state_fips",
                                  "CensusRace...H",
                                  "poverty_pct_2014...PCTPOVALL_2014", "incomelower48...Dollars")]
 
+colnames(socialdata)[colnames(socialdata)=="CensusRace...STNAME"] <- "STNAME"
+colnames(socialdata)[colnames(socialdata)=="CensusRace...CTYNAME"] <- "CTYNAME"
+colnames(socialdata)[colnames(socialdata)=="natural_amenities...Scale"] <- "Natural_Amenities"
+colnames(socialdata)[colnames(socialdata)=="CensusRace...TOT_POP"] <- "TOTPOP"
+colnames(socialdata)[colnames(socialdata)=="CensusRace...H"] <- "CensusRace_H"
+colnames(socialdata)[colnames(socialdata)=="poverty_pct_2014...PCTPOVALL_2014"] <- "PCTPOVALL_2014"
+colnames(socialdata)[colnames(socialdata)=="incomelower48...Dollars"] <- "Income_Dollars"
 
 socialdata$PercUnempl<- as.numeric(master_county_data$unemployed_2014...Unemployed_2014)/master_county_data$CensusRace...TOT_POP
 socialdata$PercMino<- (master_county_data$CensusRace...TOT_POP - master_county_data$CensusRace...WA)/master_county_data$CensusRace...TOT_POP
@@ -45,6 +52,6 @@ socialdata$PercAI<- master_county_data$CensusRace...IA/master_county_data$Census
 ## temporary fix of NAs##
 #countydata<- countydata[1:3142,]
 
-write.csv(riskdata, "output/master_county_data/cleanedrisk.csv")
-write.csv(socialdata, "output/master_county_data/cleanedsocial.csv" )
+write.csv(riskdata, "cleanedrisk.csv")
+write.csv(socialdata, "cleanedsocial.csv" )
 View(socialdata)
