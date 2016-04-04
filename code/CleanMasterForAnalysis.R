@@ -1,4 +1,4 @@
-master_county_data <- read.csv("output/master_county_data/master_county_data.csv")
+master_county_data <- read.csv("master_county_data.csv")
 View(master_county_data)
 
 
@@ -13,6 +13,12 @@ riskdata<- master_county_data[,c("state_fips",
                                    )]
 riskdata$highfirerisk<- master_county_data$Fire_risk_2012...risk_4+master_county_data$Fire_risk_2012...risk_5
 
+# Rename columns to avoid spaces
+colnames(riskdata)[colnames(riskdata)=="CensusRace...STNAME"] <- "STNAME"
+colnames(riskdata)[colnames(riskdata)=="CensusRace...CTYNAME"] <- "CTYNAME"
+colnames(riskdata)[colnames(riskdata)=="hail...total_intensity"] <- "hail_tot_intensity"
+colnames(riskdata)[colnames(riskdata)=="tornado...total_intensity"] <- "tornado_tot_intensity"
+colnames(riskdata)[colnames(riskdata)=="wind...total_intensity"] <- "wind_tot_intensity"
 
 socialdata<- master_county_data[,c("state_fips", 
                                  "county_fips", 
