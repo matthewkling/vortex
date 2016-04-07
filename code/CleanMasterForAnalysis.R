@@ -1,6 +1,9 @@
-setwd("../output/master_county_data")
+setwd("output/master_county_data")
 master_county_data <- read.csv("master_county_data.csv")
 View(master_county_data)
+
+#dangerous dropping of NAs
+master_county_data<-na.omit(master_county_data)
 
 
 riskdata<- master_county_data[,c("state_fips", 
@@ -13,6 +16,9 @@ riskdata<- master_county_data[,c("state_fips",
                                  "wind...total_intensity" 
                                    )]
 riskdata$highfirerisk<- master_county_data$Fire_risk_2012...risk_4+master_county_data$Fire_risk_2012...risk_5
+
+
+
 
 # Rename columns to avoid spaces
 colnames(riskdata)[colnames(riskdata)=="CensusRace...STNAME"] <- "STNAME"
@@ -30,7 +36,10 @@ socialdata<- master_county_data[,c("state_fips",
                                  "CensusRace...TOT_POP",
                                  "CensusRace...H",
                                  "poverty_pct_2014...PCTPOVALL_2014", "incomelower48...Dollars",
-                                 "unemployed_2014...Unemployed_2014")]
+                                 "unemployed_2014...Unemployment_rate_2014",
+                                 "unemployed_2014...Median_Household_Income_2014")]
+
+
 
 colnames(socialdata)[colnames(socialdata)=="CensusRace...STNAME"] <- "STNAME"
 colnames(socialdata)[colnames(socialdata)=="CensusRace...CTYNAME"] <- "CTYNAME"
@@ -39,7 +48,9 @@ colnames(socialdata)[colnames(socialdata)=="CensusRace...TOT_POP"] <- "TOTPOP"
 colnames(socialdata)[colnames(socialdata)=="CensusRace...H"] <- "CensusRace_H"
 colnames(socialdata)[colnames(socialdata)=="poverty_pct_2014...PCTPOVALL_2014"] <- "PCTPOVALL_2014"
 colnames(socialdata)[colnames(socialdata)=="incomelower48...Dollars"] <- "Income_Dollars"
-colnames(socialdata)[colnames(socialdata)=="unemployed_2014...Unemployed_2014"] <- "NumbUnemply"
+colnames(socialdata)[colnames(socialdata)=="unemployed_2014...Unemployed_rate_2014"] <- "UnemplyRate"
+colnames(socialdata)[colnames(socialdata)=="unemployed_2014...Median_Household_Income_2014"] <- "MedianHouseholdIncome_UE"
+
 
 
 socialdata$PercMino<- (master_county_data$CensusRace...TOT_POP - master_county_data$CensusRace...WA)/master_county_data$CensusRace...TOT_POP
