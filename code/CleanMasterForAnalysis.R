@@ -1,3 +1,4 @@
+setwd("../output/master_county_data")
 master_county_data <- read.csv("master_county_data.csv")
 View(master_county_data)
 
@@ -28,7 +29,8 @@ socialdata<- master_county_data[,c("state_fips",
                                  "natural_amenities...Scale",
                                  "CensusRace...TOT_POP",
                                  "CensusRace...H",
-                                 "poverty_pct_2014...PCTPOVALL_2014", "incomelower48...Dollars")]
+                                 "poverty_pct_2014...PCTPOVALL_2014", "incomelower48...Dollars",
+                                 "unemployed_2014...Unemployed_2014")]
 
 colnames(socialdata)[colnames(socialdata)=="CensusRace...STNAME"] <- "STNAME"
 colnames(socialdata)[colnames(socialdata)=="CensusRace...CTYNAME"] <- "CTYNAME"
@@ -37,8 +39,9 @@ colnames(socialdata)[colnames(socialdata)=="CensusRace...TOT_POP"] <- "TOTPOP"
 colnames(socialdata)[colnames(socialdata)=="CensusRace...H"] <- "CensusRace_H"
 colnames(socialdata)[colnames(socialdata)=="poverty_pct_2014...PCTPOVALL_2014"] <- "PCTPOVALL_2014"
 colnames(socialdata)[colnames(socialdata)=="incomelower48...Dollars"] <- "Income_Dollars"
+colnames(socialdata)[colnames(socialdata)=="unemployed_2014...Unemployed_2014"] <- "NumbUnemply"
 
-socialdata$PercUnempl<- as.numeric(master_county_data$unemployed_2014...Unemployed_2014)/master_county_data$CensusRace...TOT_POP
+
 socialdata$PercMino<- (master_county_data$CensusRace...TOT_POP - master_county_data$CensusRace...WA)/master_county_data$CensusRace...TOT_POP
 socialdata$PercHisp<- master_county_data$CensusRace...H/master_county_data$CensusRace...TOT_POP
 socialdata$PercBlk<- master_county_data$CensusRace...BA/master_county_data$CensusRace...TOT_POP
