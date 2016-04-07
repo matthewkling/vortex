@@ -1,3 +1,6 @@
+library(devtools)
+install_github("matthewkling/colormap", "colormap") # Add the package colormap that Matt created because he's a bamf.
+
 library(maps)
 library(mapproj)
 library(ggplot2)
