@@ -13,5 +13,5 @@ risk$fire_scaled <- scale(risk$highfirerisk)
 # Create cumulative risk index
 risk$risk_ind_sum <- (risk$hail_scaled + risk$tornado_scaled + risk$wind_scaled + risk$fire_scaled)
 
-write.csv(risk, "scaledrisk.csv", row.names = FALSE)
-trial <- read.csv("scaledrisk.csv")
+write.csv(risk, "cleanedrisk.csv", row.names = FALSE)
+
