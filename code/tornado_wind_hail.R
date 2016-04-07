@@ -43,8 +43,10 @@ countify <- function(data){
                    county_fips = str_pad(county_fips_1, 3, "left", "0")) %>%
             group_by(state_fips, county_fips) %>%
             summarize(n_storms=n(),
-                      total_intensity=sum(intensity))
+                      total_intensity=sum(intensity)) 
+      data<- filter(data, county_fips != "000")  #removing aggregate state and country rows
       return(data)
+
 }
 
 
