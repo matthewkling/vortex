@@ -78,7 +78,8 @@ shinyServer(
             
             
             g <- reactive({
-                  s <- e[,input$groups]
+                  s <- data.frame(e[,input$groups])
+                  if(ncol(s)==1) names(s) <- input$groups
                   v <- e[,input$envvar]
                   if(class(v)=="factor") v <- as.character(v)
                   v <- as.numeric(v)
@@ -93,6 +94,7 @@ shinyServer(
                         na.omit()
                   
                   if(input$histogram_region != "USA") g <- filter(g, state==input$histogram_region)
+                  #g$race[g$race=="s"] <- input$groups
                   
                   return(g)
             })
