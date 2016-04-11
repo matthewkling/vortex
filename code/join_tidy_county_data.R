@@ -1,13 +1,10 @@
-
+install.packages("dplyr","stringr", "rgdal", "raster", rgeos")
 # merge county-level datasets into a single master table
-install.packages(c("dplyr", "stringr", "rgdal", "raster", "rgeos"))
 library(dplyr)
 library(stringr)
 library(rgdal)
 library(raster)
 library(rgeos)
-
-setwd("../")
 
 # load data
 files <- list.files("output/tidy_county_data", full.names=T)

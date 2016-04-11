@@ -1,6 +1,6 @@
 .PHONY: data clean
 
-all: output/master_county_data.csv, output/cleanedsocial.csv, output/cleanrisk.csv
+all: output/master_county_data.csv output/cleanedsocial.csv output/cleanrisk.csv
 		
 output/master_county_data.csv: code/join_tidy_county_data.R
 	cd code; Rscript join_tidy_county_data.R
