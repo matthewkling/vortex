@@ -1,5 +1,5 @@
-setwd("../output/master_county_data")
-risk <- read.csv("cleanedrisk.csv", header = TRUE)
+setwd('../output/master_county_data')
+risk <- read.csv('cleanedrisk.csv', header = TRUE)
 names(risk)
 
 # Look at data before log transforming or standardizing
@@ -40,5 +40,5 @@ risk$fire_scaled <- scale(risk$highfirerisk)
 # Create cumulative risk index
 risk$risk_ind_sum <- (risk$hail_scaled + risk$tornado_scaled + risk$wind_scaled + risk$fire_scaled)
 
-write.csv(risk, "cleanedrisk.csv", row.names = FALSE)
+write.csv(risk, 'cleanedrisk.csv', row.names = FALSE)
 
