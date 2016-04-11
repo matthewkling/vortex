@@ -1,4 +1,4 @@
-setwd("output/master_county_data")
+setwd("../output/master_county_data")
 master_county_data <- read.csv("master_county_data.csv")
 View(master_county_data)
 
@@ -66,6 +66,6 @@ socialdata$PercAI<- master_county_data$CensusRace...IA/master_county_data$Census
 ## temporary fix of NAs##
 #countydata<- countydata[1:3142,]
 
-write.csv(riskdata, "cleanedrisk.csv")
-write.csv(socialdata, "cleanedsocial.csv" )
+write.csv(riskdata, "cleanedrisk.csv", row.names=FALSE)
+write.csv(socialdata, "cleanedsocial.csv", row.names=FALSE )
 View(socialdata)
