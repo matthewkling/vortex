@@ -1,5 +1,4 @@
-setwd('../output/master_county_data')
-master_county_data <- read.csv('master_county_data.csv')
+master_county_data <- read.csv('../output/master_county_data/master_county_data.csv')
 View(master_county_data)
 
 #dangerous dropping of NAs
@@ -66,6 +65,6 @@ socialdata$PercAI<- master_county_data$CensusRace...IA/master_county_data$Census
 ## temporary fix of NAs##
 #countydata<- countydata[1:3142,]
 
-write.csv(riskdata, 'cleanedrisk.csv', row.names=FALSE)
-write.csv(socialdata, 'cleanedsocial.csv', row.names=FALSE )
+write.csv(riskdata, '../output/master_county_data/riskraw.csv', row.names=FALSE)
+write.csv(socialdata, '../output/master_county_data/cleanedsocial.csv', row.names=FALSE)
 View(socialdata)
