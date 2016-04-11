@@ -1,4 +1,4 @@
-setwd("C:/Users/Carmen/Desktop/vortex/output/master_county_data")
+setwd("../output/master_county_data")
 risk <- read.csv("cleanedrisk.csv", header = TRUE)
 names(risk)
 

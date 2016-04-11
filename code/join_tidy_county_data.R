@@ -7,7 +7,7 @@ library(rgdal)
 library(raster)
 library(rgeos)
 
-setwd("../Desktop/Stat259/vortex/vortex")
+setwd("../")
 
 # load data
 files <- list.files("output/tidy_county_data", full.names=T)
