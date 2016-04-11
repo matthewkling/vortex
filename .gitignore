@@ -1,2 +1,10 @@
+<<<<<<< HEAD
 *.DS_Store*
 .Rhistory
+=======
+.DS_Store
+.gitignore
+raw_data/.DS_Store
+raw_data/.DS_Store
+.RData
+>>>>>>> 6a1098e570872a329a00f6b2954b5f424f338e22
