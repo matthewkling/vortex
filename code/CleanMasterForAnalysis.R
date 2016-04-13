@@ -2,10 +2,10 @@ master_county_data <- read.csv('output/master_county_data/master_county_data.csv
 View(master_county_data)
 
 #dangerous dropping of NAs
-master_county_data<-na.omit(master_county_data)
+#master_county_data <-na.omit(master_county_data)
 
 
-riskdata<- master_county_data[,c('state_fips', 
+riskdata <- master_county_data[,c('state_fips', 
                                  'county_fips', 
                                  'CensusRace...STNAME',
                                  'CensusRace...CTYNAME',
@@ -14,7 +14,7 @@ riskdata<- master_county_data[,c('state_fips',
                                  'tornado...total_intensity',
                                  'wind...total_intensity' 
                                    )]
-riskdata$highfirerisk<- master_county_data$Fire_risk_2012...risk_4+master_county_data$Fire_risk_2012...risk_5
+riskdata$highfirerisk <- master_county_data$Fire_risk_2012...risk_4+master_county_data$Fire_risk_2012...risk_5
 
 
 
