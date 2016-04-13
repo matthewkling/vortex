@@ -1,10 +1,7 @@
-
-
-# this script demonstrates how to summarize raster data by county
-
+## THIS DIRECTORY CHANGES FIRE DATA FROM RASTER TO COUNTY SUMMARIES
 
 # set working directory to your local vortex folder
-setwd("C:/Users/Carmen/Dropbox (Stephens Lab)/DS421/Project/vortex")
+setwd("vortex/")
 
 library(raster)
 library(rgdal)
