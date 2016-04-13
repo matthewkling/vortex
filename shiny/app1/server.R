@@ -1,35 +1,49 @@
 library(devtools)
-install_github("matthewkling/colormap", "colormap") # Add the package colormap that Matt created because he's a bamf.
-
 library(maps)
 library(mapproj)
 library(ggplot2)
-library(colormap)
 library(dplyr)
 library(tidyr)
 library(stringr)
+if(!require(colormap)) install_github("matthewkling/colormap", "colormap") # Add the package colormap that Matt created because he's a bamf.
 select <- dplyr::select
 
 
 # load and merge data
-e <- read.csv("data/cleanedcounty.csv") # exposure data
+#e <- read.csv("data/cleanedcounty.csv") # exposure data
+ds <- read.csv("data/cleanedsocial.csv", stringsAsFactors=F) %>%
+      select(-X, -land_area)
+dr <- read.csv("data/cleanedrisk.csv", stringsAsFactors=F) %>%
+      select(-land_area) %>%
+      mutate(state_fips=as.integer(state_fips), county_fips=as.integer(county_fips))
 FIPS <- maps::county.fips # fips-to-name dictionary from maps library
-e <- e %>%
+
+
+e <- full_join(ds, dr) %>%
       mutate(fips = as.integer(paste0(state_fips, str_pad(county_fips, 3, "left", 0)))) %>%
       left_join(FIPS, .)
 
+input <- list(xv=names(e)[grepl("Mino", names(e))][1], yv=names(e)[grepl("tornado", names(e))][1])
 
 shinyServer(
       function(input, output) {
             
+            ### intro page content ###
+            
+            output$intro <- renderText({ "<< project description >>\n\n\n" })
+            
+            output$download_report <- downloadHandler(
+                  filename="",
+                  content=""
+            )
             
             d <- reactive({
                   
                   # isolate data specific to user-selected variables
                   d <- data.frame(state_fips=e$state_fips,
                                   county_fips=e$county_fips,
-                                  state=e$CensusRace...STNAME,
-                                  pop=e$CensusRace...TOT_POP,
+                                  state=e$STNAME,
+                                  pop=e$TOTPOP,
                                   x=e[,input$xv],
                                   y=e[,input$yv]) %>%
                         mutate(xlog=log10(x), ylog=log10(y))
@@ -79,13 +93,14 @@ shinyServer(
             
             g <- reactive({
                   s <- data.frame(e[,input$groups])
+                  s <- as.data.frame(as.matrix(s) * e$TOTPOP)
                   if(ncol(s)==1) names(s) <- input$groups
                   v <- e[,input$envvar]
                   if(class(v)=="factor") v <- as.character(v)
                   v <- as.numeric(v)
                   g <- data.frame(state_fips=e$state_fips,
                                   county_fips=e$county_fips,
-                                  state=as.character(e$CensusRace...STNAME)) %>%
+                                  state=as.character(e$STNAME)) %>%
                         cbind(v) %>%
                         cbind(s) %>%
                         gather(race, pop, -v, -state_fips, -county_fips, -state) %>%
@@ -107,8 +122,8 @@ shinyServer(
                   p <- ggplot(g(), aes(v, weight=prop_pop, color=factor(race), fill=factor(race))) +
                         geom_density(adjust=2, alpha=.2, size=.75) +
                         geom_vline(data=m(), aes(xintercept=wmean, color=factor(race)), size=1.5) +
-                        scale_fill_manual(values=colors) +
-                        scale_color_manual(values=colors) +
+                        #scale_fill_manual(values=colors) +
+                        #scale_color_manual(values=colors) +
                         theme_minimal() +
                         theme(axis.text.y=element_blank(),
                               text=element_text(size=20),
@@ -122,7 +137,6 @@ shinyServer(
             })
             
             
-            output$intro <- renderText({ "<< project description >>" })
             
       }
 )
