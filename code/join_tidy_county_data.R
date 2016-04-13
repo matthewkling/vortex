@@ -8,7 +8,7 @@ library(rgeos)
 
 #load data
 
-files <- list.files('../output/tidy_county_data', full.names=T)
+files <- list.files('output/tidy_county_data', full.names=T)
 tables <- lapply(files, read.csv, stringsAsFactors=F)
 
 # build a combined state_county_fips variable in all tables that lack it
