@@ -1,4 +1,3 @@
-
 risk <- read.csv('../output/master_county_data/riskraw.csv', header = TRUE)
 names(risk)
 # 
