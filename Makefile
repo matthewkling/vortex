@@ -1,5 +1,3 @@
-.PHONY: data clean
-
 all: output/master_county_data/master_county_data.csv output/master_county_data/cleanedsocial.csv output/master_county_data/cleanedrisk.csv
 		
 output/master_county_data/master_county_data.csv: code/join_tidy_county_data.R
