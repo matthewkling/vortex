@@ -1,21 +1,3 @@
-<<<<<<< HEAD
-setwd("output/master_county_data")
-risk <- read.csv("cleanedrisk.csv", header = TRUE)
-names(risk)
-
-# Look at data before log transforming or standardizing
-grid <- par(mfrow=c(2, 2))
-hist(risk$highfirerisk, breaks = 20)
-hist(risk$wind_tot_intensity, breaks = 20)
-hist(risk$tornado_tot_intensity, breaks = 20)
-hist(risk$hail_tot_intensity, breaks = 20)
-par(grid)
-
-# Log transform the least normal risk variables, fire and hail, and standardize
-hist(log(risk$highfirerisk+0.000001))
-=======
->>>>>>> 1512d3222a5035ab6b6da6c4a81b98dd1d298348
-
 risk <- read.csv('../output/master_county_data/riskraw.csv', header = TRUE)
 names(risk)
 # 
