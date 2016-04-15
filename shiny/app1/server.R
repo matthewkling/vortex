@@ -76,6 +76,11 @@ input <- list(xv=vars$display[vars$category=="social"][1],
               scale="linear",
               histogram_region="USA")
 
+beforeparens <- function(x){
+      if(grepl("\\(", x)) return(substr(x, 1, regexpr("\\(", x)[1]-2))
+      return(x)}
+capfirst <- function(x) paste0(toupper(substr(x,1,1)), substr(x,2,nchar(x)))
+
 
 shinyServer(
       function(input, output) {
@@ -91,12 +96,25 @@ shinyServer(
             ### explore correlations tab content ###
             
             output$title1 <- renderText({
-                  beforeparens <- function(x){
-                        if(grepl("\\(", x)) return(substr(x, 1, regexpr("\\(", x)[1]-2))
-                        return(x)}
-                  paste(toupper(beforeparens(input$yv)), "versus", 
-                        toupper(beforeparens(input$xv)), "in",
-                        sub("USA", "the USA", toupper(input$region)))
+                  title <- paste(capfirst(beforeparens(input$yv)), "versus", 
+                                 beforeparens(input$xv))
+                  if(input$region != "USA") title <- paste(title, "in", input$region)
+                  title
+            })
+            
+            #output$title1a <- renderText({ capfirst(beforeparens(input$yv)) })
+            #output$title1b <- renderText({ paste("versus", beforeparens(input$xv)) })
+            #output$title1c <- renderText({ switch(input$region, 
+            #                                      "USA"="in the USA",
+            #                                      paste("in", input$region)) })
+            
+            output$title1a <- renderUI({
+                  HTML(paste(paste(capfirst(beforeparens(input$yv)), "vs."),
+                             capfirst(beforeparens(input$xv)),
+                             switch(input$region, 
+                                    "USA"="in the USA",
+                                    paste("in", input$region)),
+                             sep="   <br/>"))
             })
             
             d <- reactive({
@@ -131,16 +149,11 @@ shinyServer(
                                     dayglo=c("yellow", "green", "dodgerblue", "magenta", "white"),
                                     alfalfa=c("darkgreen", "dodgerblue", "gray95", "yellow", "white"),
                                     proton=c("cyan", "black", "gray95", "magenta", "white"))
-                  if(input$transpose_palette) palette[c(2,4)] <- palette[c(4,2)]
+                  #if(input$transpose_palette) palette[c(2,4)] <- palette[c(4,2)]
                   d$color[goodrows] <- colors2d(na.omit(d[goodrows,colvars]), palette[1:4])
                   d$color[is.na(d$color)] <- palette[5]
                   
                   return(d)
-                  
-                  #map("county", regions=".", fill=TRUE, col=d$color, 
-                  #    resolution = 0, lty = 0, projection = "polyconic", 
-                  #    myborder = 0, mar = c(0,0,0,0))
-                  
             })
             
             
@@ -178,8 +191,8 @@ shinyServer(
                   # apply smoothers and variable transformations
                   if(input$smoother %in% c("lm", "loess")) p <- p + geom_smooth(color="black", se=input$se, method=input$smoother)
                   if(input$smoother=="gam") p <- p + geom_smooth(color="black", se=input$se, method="gam", formula = y ~ s(x))
-                  if(input$xscale=="log10") p <- p + scale_x_log10()
                   if(input$yscale=="log10") p <- p + scale_y_log10()
+                  if(input$xscale=="log10") p <- p + scale_x_log10()
                   
                   plot(p)
             })
@@ -200,10 +213,7 @@ shinyServer(
             ### compare groups tab content ###
             
             output$title2 <- renderText({
-                  beforeparens <- function(x){
-                        if(grepl("\\(", x)) return(substr(x, 1, regexpr("\\(", x)[1]-2))
-                        return(x)}
-                  title <- paste0(beforeparens(input$envvar), ": demographic groups compared")
+                  title <- paste0(capfirst(beforeparens(input$envvar)), ": demographic groups compared")
                   if(input$histogram_region != "USA") title <- sub(":", paste0("in", input$histogram_region, ":"), title)
                   title
             })
