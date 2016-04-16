@@ -4,11 +4,13 @@ library(devtools)
 library(maps)
 library(mapproj)
 library(ggplot2)
+library(grid)
+library(gridExtra)
 library(dplyr)
 library(tidyr)
 library(stringr)
 library(mgcv)
-if(!require(colormap)) install_github("matthewkling/colormap", "colormap") # Add the package colormap that Matt created because he's a bamf.
+if(!require(colormap)) install_github("matthewkling/colormap", "colormap")
 select <- dplyr::select
 
 shinyServer(
@@ -73,8 +75,7 @@ shinyServer(
                   return(d)
             })
             
-            
-            output$scatterplot <- renderPlot({
+            scatterplot <- reactive({
                   d <- d()
                   
                   # set point size and transparency should vary by number of counties
@@ -111,11 +112,12 @@ shinyServer(
                   if(input$yscale=="log10") p <- p + scale_y_log10()
                   if(input$xscale=="log10") p <- p + scale_x_log10()
                   
-                  plot(p)
+                  return(p)
             })
             
+            output$scatterplot <- renderPlot({ plot(scatterplot()) })
             
-            output$map <- renderPlot({
+            output$map <- renderPlot({ 
                   region <- tolower(input$region)
                   if(input$region=="USA") region <- "."
                   map("county", regions=region, fill=TRUE, col=d()$color, 
@@ -125,6 +127,40 @@ shinyServer(
                       lty = 1, lwd = 1, projection = "polyconic", 
                       myborder = 0, mar = c(0,0,0,0))
             }, height=600)
+            
+            output$download_correlation_plot <- downloadHandler(
+                  filename = function() { paste0(beforeparens(input$yv), "_vs_", beforeparens(input$xv), ".png") },
+                  content = function(file) {
+                        
+                        png(file, width=1200, height=600)
+                        vp.scatter <- viewport(height=unit(1, "npc"), width=unit(0.45, "npc"), 
+                                               just=c("left","top"), 
+                                               y=1, x=0)
+                        vp.map <- viewport(height=unit(1, "npc"), width=unit(0.55, "npc"), 
+                                           just=c("left","top"), 
+                                           y=1, x=0.45)
+                        
+                        
+                        pushViewport(vp.map)
+                        grid.rect()
+                        par(plt = gridPLT(), new=TRUE)
+                        
+                        region <- tolower(input$region)
+                        if(input$region=="USA") region <- "."
+                        map("county", regions=region, fill=TRUE, col=d()$color, 
+                            resolution = 0, lty = 0, projection = "polyconic", 
+                            myborder = 0, mar = c(0,0,0,0))
+                        map("state", regions=region, col = "white", fill = FALSE, add = TRUE,
+                            lty = 1, lwd = 1, projection = "polyconic", 
+                            myborder = 0, mar = c(0,0,0,0))
+                        popViewport(1)
+                        
+                        plot(scatterplot(), vp=vp.scatter)
+                        
+                        
+                        dev.off()
+                  })
+            
             
             
             ### compare groups tab content ###
@@ -165,8 +201,7 @@ shinyServer(
                   m
             })
             
-            output$histogram <- renderPlot({
-                  require(ggplot2)
+            histogram <- reactive({
                   p <- ggplot(g(), aes(v, weight=prop_pop, color=factor(group), fill=factor(group))) +
                         geom_density(adjust=2, alpha=.2, size=.75) +
                         geom_vline(data=m(), aes(xintercept=wmean, color=factor(group)), size=1.5) +
@@ -178,8 +213,23 @@ shinyServer(
                              y="\nrelative proportion of group",
                              color="group", fill="group")
                   if(input$scale=="log10") p <- p + scale_x_log10()
-                  
-                  plot(p)
+                  p
             })
+            
+            output$histogram <- renderPlot({ plot(histogram()) })
+            
+            output$download_histogram <- downloadHandler(
+                  filename = function() { paste0(beforeparens(input$envvar), ".png") },
+                  content = function(file) {
+                        png(file, width=800, height=600)
+                        plot(histogram() +
+                                   labs(title=paste(capfirst(beforeparens(input$envvar)),
+                                                    "exposure comparison",
+                                                    switch(input$histogram_region, 
+                                                           "USA"="for the United States",
+                                                           paste("for", input$histogram_region)))))
+                        dev.off()
+                  })
+            
       }
 )

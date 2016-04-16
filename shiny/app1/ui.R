@@ -14,11 +14,8 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                                          h2(htmlOutput("title1"), align="left")
                                   ),
                                   column(2,
-                                         selectInput("region", "Region", choices=c("USA", na.omit(unique(as.character(e$STNAME)))))
-                                  ),
-                                  column(2,
-                                         selectInput("xv", "X & Y variables", choices=vars$display, selected=vars$display[vars$category=="social"][1]),
-                                         selectInput("yv", NULL, choices=vars$display, selected=vars$display[vars$category=="risk"][1])
+                                         selectInput("xv", "X & Y variables", choices=vars$display, selected=vars$display[grepl("minority", vars$display)][1]),
+                                         selectInput("yv", NULL, choices=vars$display, selected=vars$display[grepl("tornado", vars$display)][1])
                                   ),
                                   column(2,
                                          selectInput("xscale", "X & Y scale transformations", choices=c("linear", "log10", "percentile"), selected="percentile"),
@@ -29,21 +26,18 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                                          selectInput("palette", NULL, choices=c("inferno", "dayglo", "alfalfa", "proton"))#,
                                          #checkboxInput("transpose_palette", label="transpose", value=F)
                                          #checkboxInput("se", label="show confidence interval", value=F)
+                                  ),
+                                  column(2,
+                                         selectInput("region", "Region", choices=c("USA", na.omit(unique(as.character(e$STNAME))))),
+                                         downloadButton("download_correlation_plot", label="Download plot")
                                   )
                             ),
                             hr(),
-                            #h3(textOutput("title1"), align="center"),
                             fluidRow(
                                   column(5,plotOutput("scatterplot", height="600px")),
                                   column(7,plotOutput("map"), height="600px")
                             ),
                             br(),
-                            br(),
-                            fluidRow(
-                                  column(2,downloadButton("download_scatterplot", label="Download scatterplot")),
-                                  column(8),
-                                  column(2,downloadButton("download_map", label="Download map"))
-                            ),
                             br(),
                             includeMarkdown("text/explore_correlations.md")
                             
@@ -55,7 +49,8 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                                          h2(htmlOutput("title2"), align="left")
                                   ),
                                   column(2,
-                                         selectInput("histogram_region", "Region", choices=c("USA", na.omit(unique(as.character(e$STNAME)))))
+                                         selectInput("histogram_region", "Region", choices=c("USA", na.omit(unique(as.character(e$STNAME))))),
+                                         downloadButton("download_histogram", label="Download plot")
                                   ),
                                   column(2,
                                          selectInput("groups", "Select social groups", choices=na.omit(vars$group[vars$group!=""]),
@@ -74,11 +69,6 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                                   plotOutput("histogram", height="650px")
                             ),
                             br(),
-                            br(),
-                            fluidRow(
-                                  column(2,downloadButton("download_histogram", label="Download histogram")),
-                                  column(10)
-                            ),
                             br(),
                             includeMarkdown("text/explore_correlations.md")
                    )
