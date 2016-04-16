@@ -1,3 +1,5 @@
+library(plyr)
+library(markdown)
 library(devtools)
 library(maps)
 library(mapproj)
@@ -5,85 +7,13 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(stringr)
+library(mgcv)
 if(!require(colormap)) install_github("matthewkling/colormap", "colormap") # Add the package colormap that Matt created because he's a bamf.
 select <- dplyr::select
 
-
-# load data
-ds <- read.csv("data/cleanedsocial.csv", stringsAsFactors=F) %>%
-      mutate(fips = as.integer(paste0(state_fips, str_pad(county_fips, 3, "left", 0)))) %>%
-      select(-STNAME, -CTYNAME, -state_fips, -county_fips, -land_area)
-
-dr <- read.csv("data/cleanedrisk.csv", stringsAsFactors=F) %>%
-      #select(-land_area) %>%
-      mutate(state_fips=as.integer(state_fips),
-             county_fips=as.integer(county_fips)) %>%
-      mutate(fips = as.integer(paste0(state_fips, str_pad(county_fips, 3, "left", 0)))) %>%
-      select(-CTYNAME, -state_fips, -county_fips)
-
-# fips-to-name dictionary from maps library;
-FIPS <- maps::county.fips
-FIPS$polyname <- as.character(FIPS$polyname)
-FIPS$polyname[FIPS$polyname=="florida,miami-dade"] <- "florida,dade"
-
-# a clean counties table with the proper number and order of counties for plotting
-cty <- readRDS("data/counties.rds") %>%
-      mutate(polyname = name) %>%
-      select(polyname) %>%
-      left_join(., FIPS) %>%
-      mutate(ID=1:n())
-
-#if(!all.equal(ds$fips, dr$fips)) stop("social and risk data are misaligned")
-e <- cbind(dr, select(ds, -fips))
-fill <- function(x) na.omit(x)[1]
-e <- left_join(cty, e) %>%
-      group_by(ID) %>%
-      summarise_each(funs(fill)) %>%
-      ungroup() %>%
-      filter(!duplicated(ID))
-#if(!all.equal(cty$fips, e$fips)) stop("incorrect county structure")
-e <- as.data.frame(e)
-
-
-# fill in some missing values -- this is a patch that shold maybe be transferred to the data prep scripts
-na2min <- function(x){
-      x[is.na(x) | x<0] <- min(na.omit(x[x>=0]))
-      return(x)
-}
-e <- mutate_each_(e, funs(na2min), names(e)[grepl("tot_intensity", names(e))]) %>%
-      mutate(population_density = TOTPOP/land_area,
-             Income_Dollars = as.integer(as.character(sub(",", "", Income_Dollars))))
-
-
-vars <- read.csv("data/variable_names", stringsAsFactors=F) %>%
-      filter(category != "other") %>%
-      arrange(desc(category), display)
-r2d <- function(x) vars$display[match(x, vars$raw)]
-d2r <- function(x) vars$raw[match(x, vars$display)]
-g2r <- function(x) vars$raw[match(x, vars$group)]
-
-# fake inputs for dev/debugging -- not used
-input <- list(xv=vars$display[vars$category=="social"][1], 
-              yv=vars$display[vars$category=="risk"][1],
-              xscale="linear",
-              yscale="linear",
-              smoother="none",
-              region="USA",
-              palette="inferno",
-              transpose_palette=F,
-              groups=na.omit(vars$group[vars$group!=""])[1],
-              envvar=vars$display[vars$category=="risk"][1],
-              scale="linear",
-              histogram_region="USA")
-
-beforeparens <- function(x){
-      if(grepl("\\(", x)) return(substr(x, 1, regexpr("\\(", x)[1]-2))
-      return(x)}
-capfirst <- function(x) paste0(toupper(substr(x,1,1)), substr(x,2,nchar(x)))
-
-
 shinyServer(
       function(input, output) {
+            
             
             ### intro tab content ###
             
@@ -95,26 +25,13 @@ shinyServer(
             
             ### explore correlations tab content ###
             
-            output$title1 <- renderText({
-                  title <- paste(capfirst(beforeparens(input$yv)), "versus", 
-                                 beforeparens(input$xv))
-                  if(input$region != "USA") title <- paste(title, "in", input$region)
-                  title
-            })
-            
-            #output$title1a <- renderText({ capfirst(beforeparens(input$yv)) })
-            #output$title1b <- renderText({ paste("versus", beforeparens(input$xv)) })
-            #output$title1c <- renderText({ switch(input$region, 
-            #                                      "USA"="in the USA",
-            #                                      paste("in", input$region)) })
-            
-            output$title1a <- renderUI({
+            output$title1 <- renderUI({
                   HTML(paste(paste(capfirst(beforeparens(input$yv)), "vs."),
                              capfirst(beforeparens(input$xv)),
                              switch(input$region, 
-                                    "USA"="in the USA",
+                                    "USA"="in the United States",
                                     paste("in", input$region)),
-                             sep="   <br/>"))
+                             sep="<br/>"))
             })
             
             d <- reactive({
@@ -212,10 +129,13 @@ shinyServer(
             
             ### compare groups tab content ###
             
-            output$title2 <- renderText({
-                  title <- paste0(capfirst(beforeparens(input$envvar)), ": demographic groups compared")
-                  if(input$histogram_region != "USA") title <- sub(":", paste0("in", input$histogram_region, ":"), title)
-                  title
+            output$title2 <- renderUI({
+                  HTML(paste(capfirst(beforeparens(input$envvar)),
+                             "exposure comparison",
+                             switch(input$histogram_region, 
+                                    "USA"="for the United States",
+                                    paste("for", input$histogram_region)),
+                             sep="<br/>"))
             })
             
             g <- reactive({
@@ -229,9 +149,10 @@ shinyServer(
                   g <- data.frame(state=as.character(e$STNAME)) %>%
                         cbind(v) %>%
                         cbind(s) %>%
-                        gather(race, pop, -v, -state) %>%
-                        group_by(race) %>%
-                        mutate(prop_pop = pop / sum(na.omit(pop))) %>%
+                        tidyr::gather(group, pop, -v, -state) %>%
+                        dplyr::group_by(group) %>%
+                        mutate(prop_pop = pop / sum(na.omit(pop)),
+                               group=factor(group)) %>%
                         na.omit()
                   
                   if(input$histogram_region != "USA") g <- filter(g, state==input$histogram_region)
@@ -240,15 +161,15 @@ shinyServer(
             })
             
             m <- reactive({
-                  m <- summarize(g(), wmean = weighted.mean(v, pop))
+                  m <- group_by(g(), group) %>% dplyr::summarize(wmean = weighted.mean(v, pop))
+                  m
             })
             
             output$histogram <- renderPlot({
-                  p <- ggplot(g(), aes(v, weight=prop_pop, color=factor(race), fill=factor(race))) +
+                  require(ggplot2)
+                  p <- ggplot(g(), aes(v, weight=prop_pop, color=factor(group), fill=factor(group))) +
                         geom_density(adjust=2, alpha=.2, size=.75) +
-                        geom_vline(data=m(), aes(xintercept=wmean, color=factor(race)), size=1.5) +
-                        #scale_fill_manual(values=colors) +
-                        #scale_color_manual(values=colors) +
+                        geom_vline(data=m(), aes(xintercept=wmean, color=factor(group)), size=1.5) +
                         theme_minimal() +
                         theme(axis.text.y=element_blank(),
                               text=element_text(size=20),
@@ -260,8 +181,5 @@ shinyServer(
                   
                   plot(p)
             })
-            
-            
-            
       }
 )

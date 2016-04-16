@@ -11,7 +11,7 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                    tabPanel("explore correlations",
                             fluidRow(
                                   column(4,
-                                         h2(htmlOutput("title1a"), align="left")
+                                         h2(htmlOutput("title1"), align="left")
                                   ),
                                   column(2,
                                          selectInput("region", "Region", choices=c("USA", na.omit(unique(as.character(e$STNAME)))))
@@ -21,8 +21,8 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                                          selectInput("yv", NULL, choices=vars$display, selected=vars$display[vars$category=="risk"][1])
                                   ),
                                   column(2,
-                                         selectInput("xscale", "X & Y scale transformations", choices=c("linear", "log10", "percentile"), selected="log10"),
-                                         selectInput("yscale", NULL, choices=c("linear", "log10", "percentile"), selected="log10")
+                                         selectInput("xscale", "X & Y scale transformations", choices=c("linear", "log10", "percentile"), selected="percentile"),
+                                         selectInput("yscale", NULL, choices=c("linear", "log10", "percentile"), selected="percentile")
                                   ),
                                   column(2,
                                          selectInput("smoother", "Smoother & color palette", choices=c("none", "lm", "loess", "gam"), selected="lm"),
@@ -51,27 +51,27 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                    
                    tabPanel("compare groups",
                             fluidRow(
-                                  column(3,
+                                  column(4,
+                                         h2(htmlOutput("title2"), align="left")
+                                  ),
+                                  column(2,
+                                         selectInput("histogram_region", "Region", choices=c("USA", na.omit(unique(as.character(e$STNAME)))))
+                                  ),
+                                  column(2,
                                          selectInput("groups", "Select social groups", choices=na.omit(vars$group[vars$group!=""]),
                                                      selected=na.omit(vars$group[vars$group!=""])[c(3,4)], multiple=T, selectize=T)
                                   ),
-                                  column(3,
+                                  column(2,
                                          selectInput("envvar", "Select environmental variable", choices=vars$display[vars$category=="risk"],
                                                      selected=vars$display[vars$category=="risk"][1], multiple=F, selectize=T)
                                   ),
-                                  column(3,
+                                  column(2,
                                          selectInput("scale", "Scale transformation", choices=c("linear", "log10"), selected="log10")
-                                  ),
-                                  column(3,
-                                         selectInput("histogram_region", "Region", choices=c("USA", na.omit(unique(as.character(e$STNAME)))))
                                   )
                             ),
                             hr(),
-                            h3(textOutput("title2"), align="center"),
                             fluidRow(
                                   plotOutput("histogram", height="650px")
-                                  #column(5,plotOutput("scatterplot", height="500px")),
-                                  #column(7,plotOutput("map"), height="600px")
                             ),
                             br(),
                             br(),
