@@ -1,6 +1,6 @@
 #data obtained from http://www.ers.usda.gov/dataFiles/CountyLevelDatasets/PovertyEstimates.xls
 
-setwd("vortex")
+#setwd("vortex") #code will not run appropriately from another directory
 library(rio)
 
 pov.raw <- import("raw_data/poverty_unemployment_med_income/PovertyEstimates.xls")
