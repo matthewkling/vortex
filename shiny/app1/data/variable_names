@@ -20,6 +20,7 @@ MedianHouseholdIncome_UE,income (dollars),,social
 PercMino,percent minority,minority,social
 PercHisp,percent Hispanic,Hispanic,social
 PercBlk,percent black,black,social
+PercWh,percent white,white,social
 PercAs,percent Asian,Asian,social
 PercPIHI,percent Pacific/Hawaiian Islander,Pacific/Hawaiian Islander,social
 PercAI,percent American Indian,American Indian,social
