@@ -1,59 +1,76 @@
 
-shinyUI(navbarPage(strong("DEMOGRAPHICS OF DISASTER"), 
+shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"), 
                    
                    tabPanel("about",
-                            textOutput("intro")
+                            includeMarkdown("text/intro.md"),
+                            hr(),
+                            br(),
+                            downloadButton("download_report", label="Download the report")
                    ),
                    
                    tabPanel("explore correlations",
                             fluidRow(
-                                  column(3,
-                                         selectInput("xv", "X and Y variables", choices=names(e), selected=names(e)[grepl("Mino", names(e))][1]),
-                                         selectInput("yv", NULL, choices=names(e), selected=names(e)[grepl("tornado", names(e))][1])
+                                  column(4,
+                                         h2(htmlOutput("title1"), align="left")
                                   ),
-                                  column(3,
-                                         selectInput("xscale", "X and Y scale transformations", choices=c("linear", "log10"), selected="log10"),
-                                         selectInput("yscale", NULL, choices=c("linear", "log10"), selected="log10")
+                                  column(2,
+                                         selectInput("xv", "X & Y variables", choices=vars$display, selected=vars$display[grepl("minority", vars$display)][1]),
+                                         selectInput("yv", NULL, choices=vars$display, selected=vars$display[grepl("tornado", vars$display)][1])
                                   ),
-                                  column(3,
-                                         selectInput("smoother", "Smoother", choices=c("none", "lm", "loess", "gam"), selected="lm"),
-                                         checkboxInput("se", label="show confidence interval", value=F)
+                                  column(2,
+                                         selectInput("xscale", "X & Y scale transformations", choices=c("linear", "log10", "percentile"), selected="percentile"),
+                                         selectInput("yscale", NULL, choices=c("linear", "log10", "percentile"), selected="percentile")
                                   ),
-                                  column(3,
-                                         selectInput("region", "Region", choices=c("USA", unique(as.character(e$CensusRace...STNAME))))
+                                  column(2,
+                                         selectInput("smoother", "Smoother & color palette", choices=c("none", "lm", "loess", "gam"), selected="lm"),
+                                         selectInput("palette", NULL, choices=c("inferno", "dayglo", "alfalfa", "proton"))#,
+                                         #checkboxInput("transpose_palette", label="transpose", value=F)
+                                         #checkboxInput("se", label="show confidence interval", value=F)
+                                  ),
+                                  column(2,
+                                         selectInput("region", "Region", choices=c("USA", na.omit(unique(as.character(e$STNAME))))),
+                                         downloadButton("download_correlation_plot", label="Download plot")
                                   )
-                                  
                             ),
                             hr(),
                             fluidRow(
                                   column(5,plotOutput("scatterplot", height="600px")),
                                   column(7,plotOutput("map"), height="600px")
-                            )
+                            ),
+                            br(),
+                            br(),
+                            includeMarkdown("text/explore_correlations.md")
+                            
                    ),
                    
                    tabPanel("compare groups",
                             fluidRow(
-                                  column(3,
-                                         selectInput("groups", "Select social groups", choices=names(e)[grepl("CensusRace", names(e))],
-                                                     selected=names(e)[grepl("pop", names(e), ignore.case=T)][1], multiple=T, selectize=T)
+                                  column(4,
+                                         h2(htmlOutput("title2"), align="left")
                                   ),
-                                  column(3,
-                                         selectInput("envvar", "Select environmental variable", choices=names(e)[!grepl("CensusRace", names(e))],
-                                                     selected=names(e)[grepl("tornado", names(e))][1], multiple=F, selectize=T)
+                                  column(2,
+                                         selectInput("histogram_region", "Region", choices=c("USA", na.omit(unique(as.character(e$STNAME))))),
+                                         downloadButton("download_histogram", label="Download plot")
                                   ),
-                                  column(3,
+                                  column(2,
+                                         selectInput("groups", "Select social groups", choices=na.omit(vars$group[vars$group!=""]),
+                                                     selected=na.omit(vars$group[vars$group!=""])[c(3,4)], multiple=T, selectize=T)
+                                  ),
+                                  column(2,
+                                         selectInput("envvar", "Select environmental variable", choices=vars$display[vars$category=="risk"],
+                                                     selected=vars$display[vars$category=="risk"][1], multiple=F, selectize=T)
+                                  ),
+                                  column(2,
                                          selectInput("scale", "Scale transformation", choices=c("linear", "log10"), selected="log10")
-                                  ),
-                                  column(3,
-                                         selectInput("histogram_region", "Region", choices=c("USA", unique(as.character(e$CensusRace...STNAME))))
                                   )
                             ),
                             hr(),
                             fluidRow(
                                   plotOutput("histogram", height="650px")
-                                  #column(5,plotOutput("scatterplot", height="500px")),
-                                  #column(7,plotOutput("map"), height="600px")
-                            )
+                            ),
+                            br(),
+                            br(),
+                            includeMarkdown("text/explore_correlations.md")
                    )
                    
 ))

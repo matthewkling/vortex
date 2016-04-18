@@ -1,10 +1,4 @@
-
-
-# this script demonstrates how to summarize raster data by county
-
-
-# set working directory to your local vortex folder
-setwd("C:/Users/Carmen/Dropbox (Stephens Lab)/DS421/Project/vortex")
+## THIS DIRECTORY CHANGES FIRE DATA FROM RASTER TO COUNTY SUMMARIES
 
 library(raster)
 library(rgdal)
@@ -20,6 +14,7 @@ counties <- crop(counties, extent(-126, -59, 22, 53)) # crop to US48 using lat l
 extent(counties) # shows you boundaries of counties in lat long
 counties$area <- gArea(counties, byid=T) # calculate area per county
 
+# THIS FILE PATH IS NOT WITHIN VORTEX BECAUSE UNZIPPING THIS LARGE OF A FILE WITHIN VORTEX CRASHES GIT
 setwd("C:/Users/Carmen/Dropbox (Stephens Lab)/DS421/Project")
 r <- raster("wfp_2012_classified.txt")
 
@@ -54,8 +49,8 @@ for(i in State.names[5:49]) {
 names(States)[1] <- "state_fips"
 names(States)[2] <- "county_fips"
 Fire_Risk_by_County <- States
-setwd("C:/Users/Carmen/Desktop/vortex/output/tidy_county_data")
-write.csv(Fire_Risk_by_County, "Fire_risk_2012.csv", row.names=F)
+setwd("~/vortex/")
+write.csv(Fire_Risk_by_County, "output/tidy_county_data/Fire_risk_2012.csv", row.names=F)
 
 # plot a map
 #values <- "States$mean_risk" # the variable you want to map

@@ -1,0 +1,28 @@
+raw,display,group,category
+fips,,,other
+STNAME,,,other
+hail_tot_intensity,hail (exposure index),,risk
+tornado_tot_intensity,tornado (exposure index),,risk
+wind_tot_intensity,wind (exposure index),,risk
+highfirerisk,wildfire risk,,risk
+hail_scaled,,,other
+tornado_scaled,,,other
+wind_scaled,,,other
+fire_scaled,,,other
+risk_ind_sum,overall risk index,,risk
+Natural_Amenities,natural amenities,,risk
+TOTPOP,total population,,social
+CensusRace_H,Hispanic population,,social
+PCTPOVALL_2014,poverty (% below line),poor,social
+Income_Dollars,income (median household),,social
+unemployed_2014...Unemployment_rate_2014,unemployment rate,unemployed,social
+MedianHouseholdIncome_UE,income (dollars),,social
+PercMino,percent minority,minority,social
+PercHisp,percent Hispanic,Hispanic,social
+PercBlk,percent black,black,social
+PercWh,percent white,white,social
+PercAs,percent Asian,Asian,social
+PercPIHI,percent Pacific/Hawaiian Islander,Pacific/Hawaiian Islander,social
+PercAI,percent American Indian,American Indian,social
+population_density,population density,,social
+land_area,land area,,risk
