@@ -1,0 +1,6 @@
+Notes for making Makefile to download things
+
+Getting poverty,unemployment data (checked, works)
+curl http://www.ers.usda.gov/dataFiles/CountyLevelDatasets/PovertyEstimates.xls >> raw_data/poverty_unemployment/PovertyEstimates.xls
+curl http://www.ers.usda.gov/dataFiles/CountyLevelDatasets/Unemployment.xls >> raw_data/poverty_unemployment/Unemployment.xls
+

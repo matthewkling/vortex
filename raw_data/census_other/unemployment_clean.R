@@ -1,16 +1,17 @@
-#data obtained from http://www.ers.usda.gov/data-products/county-level-data-sets/download-data.aspx
+#data obtained from http://www.ers.usda.gov/dataFiles/CountyLevelDatasets/Unemployment.xls
 
-setwd("vortex")
+#setwd("vortex") #code will not run appropriately from another directory
 library(rio)
 
-pov.raw <- import("raw_data/poverty_unemployment/Unemployment.xls")
+unem.raw <- import("raw_data/poverty_unemployment_med_income/Unemployment.xls")
 
-pov <- pov.raw[-(1:(which(pov.raw[,1]=="FIPS_Code")-1)),] #remove the rows above the column names, held comments from original excel file
-colnames(pov) <- pov[which(pov[,1]=="FIPS_Code"),] #adds rownames
-if (which(pov$FIPS_Code=="FIPS_Code")!=0){pov <- pov[-which(pov$FIPS_Code=="FIPS_Code"),]} #if the names are still in a row, removes.
-pov <- pov[-is.na(pov$Rural_urban_continuum_code_2003),] #removes data for just states (leaves only counties)
-if (which(names(pov)=="FIPS_Code")!=0){names(pov)[which(names(pov)=="FIPS_Code")] <- "state_county_fips"} #changes FIPS code column
+unem <- unem.raw[-(1:(which(unem.raw[,1]=="FIPS_Code")-1)),] #remove the rows above the column names, held comments from original excel file
+colnames(unem) <- unem[which(unem[,1]=="FIPS_Code"),] #adds rownames
+if (which(unem$FIPS_Code=="FIPS_Code")!=0){unem <- unem[-which(unem$FIPS_Code=="FIPS_Code"),]} #if the names are still in a row, removes.
+unem <- unem[-which(is.na(unem$Rural_urban_continuum_code_2003)),] #removes data for just states (leaves only counties)
+if (which(names(unem)=="FIPS_Code")!=0){names(unem)[which(names(unem)=="FIPS_Code")] <- "state_county_fips"} #changes FIPS code column
 
+#selecting desired data
 categories <- c(
   "state_county_fips",
   "Unemployed_2014",
@@ -18,7 +19,6 @@ categories <- c(
   "Median_Household_Income_2014"
 )
 
-pov.clean.2014 <- pov[,categories]
+unem.clean.2014 <- unem[,categories]
 
-write.csv(pov.clean.2014,"output/tidy_county_data/unemployed_2014.csv",row.names=F)
-
+write.csv(unem.clean.2014,"output/tidy_county_data/unemployed_2014.csv",row.names=F) #writes out cleaned data

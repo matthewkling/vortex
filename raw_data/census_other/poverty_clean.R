@@ -1,9 +1,9 @@
-#data obtained from http://www.ers.usda.gov/data-products/county-level-data-sets/download-data.aspx
+#data obtained from http://www.ers.usda.gov/dataFiles/CountyLevelDatasets/PovertyEstimates.xls
 
 setwd("vortex")
 library(rio)
 
-pov.raw <- import("raw_data/poverty_unemployment/PovertyEstimates.xls")
+pov.raw <- import("raw_data/poverty_unemployment_med_income/PovertyEstimates.xls")
 
 pov <- pov.raw[-(1:(which(pov.raw[,1]=="FIPStxt")-1)),] #remove the rows above the column names, held comments from original excel file
 colnames(pov) <- pov[which(pov[,1]=="FIPStxt"),] #adds rownames
@@ -11,6 +11,7 @@ if (which(pov$FIPStxt=="FIPStxt")!=0){pov <- pov[-which(pov$FIPStxt=="FIPStxt"),
 pov <- pov[-which(is.na(pov$Rural_urban_Continuum_Code_2003)),] #removes data for just states (leaves only counties)
 if (which(names(pov)=="FIPStxt")!=0){names(pov)[which(names(pov)=="FIPStxt")] <- "state_county_fips"} #changes FIPS code column
 
+#selecting desired data
 categories <- c(
   "state_county_fips",
   "POVALL_2014",
@@ -19,5 +20,4 @@ categories <- c(
 
 pov.clean.2014 <- pov[,categories]
 
-write.csv(pov.clean.2014,"output/tidy_county_data/poverty_2014.csv",row.names=F)
-
+write.csv(pov.clean.2014,"output/tidy_county_data/poverty_2014.csv",row.names=F) #writes out cleaned data

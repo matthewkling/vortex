@@ -1,6 +1,6 @@
 ### cleaning income data
 
-lower48income <- read.csv("C:/Users/User1/Desktop/Stat259/vortex/vortex/raw_data/income/lower48income.csv")
+lower48income <- read.csv("raw_data/income/lower48income.csv") #assume vortex is working directory
 View(lower48income)
 
 income<- na.omit(lower48income)
