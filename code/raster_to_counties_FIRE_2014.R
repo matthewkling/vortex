@@ -48,9 +48,9 @@ for(i in State.names[1:49]) {
 }
 names(States)[1] <- "state_fips"
 names(States)[2] <- "county_fips"
-Fire_Risk_by_County_2014 <- States
+Fire_Risk_by_County <- States
 setwd("~/vortex/")
-write.csv(Fire_Risk_by_County_2014, "output/tidy_county_data/Fire_risk_2012.csv", row.names=F)
+write.csv(Fire_Risk_by_County, "output/tidy_county_data/Fire_risk_2014.csv", row.names=F)
 
 # plot a map
 #values <- "States$mean_risk" # the variable you want to map
