@@ -1,4 +1,4 @@
-install.packages("dplyr","stringr", "rgdal", "raster", rgeos")
+#install.packages("dplyr","stringr", "rgdal", "raster", "rgeos")
 # merge county-level datasets into a single master table
 library(dplyr)
 library(stringr)
