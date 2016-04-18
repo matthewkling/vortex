@@ -6,6 +6,7 @@ library(mapproj)
 library(ggplot2)
 library(grid)
 library(gridExtra)
+library(gridBase)
 library(dplyr)
 library(tidyr)
 library(stringr)
@@ -202,8 +203,10 @@ shinyServer(
             })
             
             histogram <- reactive({
-                  p <- ggplot(g(), aes(v, weight=prop_pop, color=factor(group), fill=factor(group))) +
-                        geom_density(adjust=2, alpha=.2, size=.75) +
+                  p <- ggplot() +
+                        geom_area(data=g(), 
+                                     aes(v, ..density.., weight=prop_pop, color=factor(group), fill=factor(group)),
+                                     alpha=.15, size=.5, bins=15, position="identity", stat="bin") +
                         geom_vline(data=m(), aes(xintercept=wmean, color=factor(group)), size=1.5) +
                         theme_minimal() +
                         theme(axis.text.y=element_blank(),
