@@ -14,7 +14,7 @@ riskdata <- master_county_data[,c('state_fips',
                                  'tornado...total_intensity',
                                  'wind...total_intensity' 
                                    )]
-riskdata$highfirerisk <- master_county_data$Fire_risk_2012...risk_4+master_county_data$Fire_risk_2012...risk_5
+riskdata$highfirerisk <- master_county_data$Fire_risk_2014...risk_4+master_county_data$Fire_risk_2014...risk_5
 
 
 
