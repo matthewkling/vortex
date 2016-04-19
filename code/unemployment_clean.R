@@ -8,7 +8,7 @@ unem.raw <- import("raw_data/poverty_unemployment_med_income/Unemployment.xls")
 unem <- unem.raw[-(1:(which(unem.raw[,1]=="FIPS_Code")-1)),] #remove the rows above the column names, held comments from original excel file
 colnames(unem) <- unem[which(unem[,1]=="FIPS_Code"),] #adds rownames
 if (which(unem$FIPS_Code=="FIPS_Code")!=0){unem <- unem[-which(unem$FIPS_Code=="FIPS_Code"),]} #if the names are still in a row, removes.
-unem <- unem[-which(is.na(unem$Rural_urban_continuum_code_2003)),] #removes data for just states (leaves only counties)
+unem <- unem[-which(is.na(unem$Rural_urban_continuum_code_2003)),] #removes data for just states and misc census areas (leaves only counties)
 if (which(names(unem)=="FIPS_Code")!=0){names(unem)[which(names(unem)=="FIPS_Code")] <- "state_county_fips"} #changes FIPS code column
 
 #selecting desired data
