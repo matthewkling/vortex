@@ -15,7 +15,8 @@ if (which(names(unem)=="FIPS_Code")!=0){names(unem)[which(names(unem)=="FIPS_Cod
 categories <- c(
   "state_county_fips",
   "Unemployed_2014",
-  "Unemployment_rate_2014"
+  "Unemployment_rate_2014",
+  "Median_Household_Income_2014" #had been removed, but was included from this file in master cleaning
 )
 
 unem.clean.2014 <- unem[,categories]
