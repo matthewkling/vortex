@@ -7,6 +7,7 @@ The direct download link for the dataset is http://www.nhc.noaa.gov/data/hurdat/
 Metadata can be found at http://www.nhc.noaa.gov/data/hurdat/hurdat2-format-atlantic.pdf
 
 Starting from this raw file, our scripts:
+
 1. restructure the data into a tidy tabular format
 2. interpolate the raw 6-hour time steps to a one-hour frequency to better represent continuous storm paths
 3. derive an index of destructive force by cubing maximum windspeed at each timestep (wind force is proportional to the cube of velocity)
