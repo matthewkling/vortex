@@ -1,4 +1,4 @@
-"state_fips","county_fips","STNAME","CTYNAME","land_area","hail_tot_intensity","tornado_tot_intensity","hurricane...total_intensity","wind_tot_intensity","highfirerisk"
+"state_fips","county_fips","STNAME","CTYNAME","land_area","hail_tot_intensity","tornado_tot_intensity","hurricane_tot_intensity","wind_tot_intensity","highfirerisk"
 1,1,"Alabama","Autauga County",0.1502600704145,97.18,30,393770.833333333,5694,0.156088474970896
 1,3,"Alabama","Baldwin County",0.409937682202052,145.2,60,23481494.212963,7295,0.476767169179229
 1,5,"Alabama","Barbour County",0.223255726739205,80.29,15,1150042.24537037,2179,0.00606871654425495

@@ -1,5 +1,6 @@
-# this script distills and organizes the "master county" dataset (which includes every variable from every source dataset), 
-# producing a table of data for inclusion in the shiny app
+# This script distills and organizes the "master county" dataset (which includes every variable from every source dataset), 
+# producing a table of data for inclusion in the shiny app. It also scales and combines risk variables to create an overall
+# risk index. It exports two copies of each file, one to the shiny app data folder and one to the primary data output folder.
 
 # load input data
 master_county_data <- read.csv('output/master_county_data/master_county_data.csv')
@@ -26,9 +27,28 @@ colnames(riskdata)[colnames(riskdata)=='CensusRace...STNAME'] <- 'STNAME'
 colnames(riskdata)[colnames(riskdata)=='CensusRace...CTYNAME'] <- 'CTYNAME'
 colnames(riskdata)[colnames(riskdata)=='hail...total_intensity'] <- 'hail_tot_intensity'
 colnames(riskdata)[colnames(riskdata)=='tornado...total_intensity'] <- 'tornado_tot_intensity'
+colnames(riskdata)[colnames(riskdata)=='hurricane...total_intensity'] <- 'hurricane_tot_intensity'
 colnames(riskdata)[colnames(riskdata)=='wind...total_intensity'] <- 'wind_tot_intensity'
 
-write.csv(riskdata, 'output/master_county_data/riskraw.csv', row.names=FALSE)
+#write.csv(riskdata, 'output/master_county_data/riskraw.csv', row.names=FALSE)
+
+
+# Standardize all risk variables
+#names(risk)
+riskdata$hail_scaled <- scale(riskdata$hail_tot_intensity) # default for scale is substract mean, divide by sd
+riskdata$tornado_scaled <- scale(riskdata$tornado_tot_intensity)
+riskdata$wind_scaled <- scale(riskdata$wind_tot_intensity)
+riskdata$hurricane_scaled <- scale(riskdata$hurricane_tot_intensity)
+riskdata$fire_scaled <- scale(riskdata$highfirerisk)
+
+# Create cumulative risk index
+riskdata$risk_ind_sum <- (riskdata$hail_scaled + riskdata$tornado_scaled + riskdata$wind_scaled + riskdata$fire_scaled)
+
+write.csv(riskdata, 'output/master_county_data/cleanedrisk.csv', row.names = FALSE)
+write.csv(riskdata, 'shiny/app1/data/cleanedrisk.csv', row.names = FALSE)
+
+
+
 
 
 
@@ -65,4 +85,5 @@ socialdata$PercPIHI<- master_county_data$CensusRace...Na/master_county_data$Cens
 socialdata$PercAI<- master_county_data$CensusRace...IA/master_county_data$CensusRace...TOT_POP
 
 write.csv(socialdata, 'output/master_county_data/cleanedsocial.csv', row.names=FALSE)
+write.csv(socialdata, 'shiny/app1/data/cleanedsocial.csv', row.names=FALSE)
 
