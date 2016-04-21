@@ -1,3 +1,8 @@
+
+# TODO
+#     normalize relevant risk variables by county area
+
+
 library(dplyr)
 library(tidyr)
 library(maps)
