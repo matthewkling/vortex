@@ -42,7 +42,9 @@ riskdata$hurricane_scaled <- scale(riskdata$hurricane_tot_intensity)
 riskdata$fire_scaled <- scale(riskdata$highfirerisk)
 
 # Create cumulative risk index
-riskdata$risk_ind_sum <- (riskdata$hail_scaled + riskdata$tornado_scaled + riskdata$wind_scaled + riskdata$fire_scaled)
+riskdata$risk_ind_sum <- (riskdata$hail_scaled + riskdata$tornado_scaled + 
+                                riskdata$wind_scaled + riskdata$fire_scaled + 
+                                riskdata$hurricane_scaled)
 
 write.csv(riskdata, 'output/master_county_data/cleanedrisk.csv', row.names = FALSE)
 write.csv(riskdata, 'shiny/app1/data/cleanedrisk.csv', row.names = FALSE)

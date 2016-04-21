@@ -3,6 +3,7 @@ library(tidyr)
 library(maps)
 library(mapproj)
 library(stringr)
+select <- dplyr::select
 
 
 # load data
