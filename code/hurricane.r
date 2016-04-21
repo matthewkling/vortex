@@ -100,6 +100,14 @@ s <- data %>%
             mutate(state_fips=STATEFP, county_fips=COUNTYFP) %>%
             dplyr::select(n_storms:county_fips)
 
+# fill NA values with minimum valid value
+na2min <- function(x){
+      x[is.na(x) | x<0] <- min(na.omit(x[x>=0]))
+      return(x)
+}
+s$total_intensity <- na2min(s$total_intensity)
+s$intensity_per_area <- na2min(s$intensity_per_area)
+
 # export final tidy data
 write.csv(s, "output/tidy_county_data/hurricane.csv", row.names=F)
 

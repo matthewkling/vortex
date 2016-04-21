@@ -1,8 +1,5 @@
 
 # user-specific file paths -- each person should replicate for their machine, and define the user variable in the console before running
-if(user=="Matt") setwd("~/documents/vortex")
-if(user=="Your name") setwd("path to your local git directory")
-
 
 # libraries
 library(dplyr)
@@ -42,13 +39,18 @@ countify <- function(data){
             mutate(state_fips = str_pad(state_fips, 2, "left", "0"),
                    county_fips = str_pad(county_fips_1, 3, "left", "0")) %>%
             group_by(state_fips, county_fips) %>%
-            summarize(n_storms=n(),
+            dplyr::summarize(n_storms=n(),
                       total_intensity=sum(intensity)) 
       data<- filter(data, county_fips != "000")  #removing aggregate state and country rows
       return(data)
-
 }
 
+# fill NA values with minimum valid value
+na2min <- function(x){
+      x$n_storms[is.na(x$n_storms)] <- 0
+      x$total_intensity[is.na(x$total_intensity) | x$total_intensity<0] <- min(na.omit(x$total_intensity[x$total_intensity>=0]))
+      return(x)
+}
 
 # make shapefile from county data table
 geojoin <- function(data, shapefile){
@@ -97,7 +99,9 @@ names(files) <- c("tornado", "hail", "wind")
 
 d <- lapply(files, load_data)
 d <- lapply(d, countify)
+d <- lapply(d, na2min)
 for(w in names(d)) write.csv(d[[w]], paste0("output/tidy_county_data/", w, ".csv"), row.names=F)
-d <- lapply(d, geojoin, shapefile=counties)
-lapply(names(d), make_map)
+
+#d <- lapply(d, geojoin, shapefile=counties)
+#lapply(names(d), make_map)
 

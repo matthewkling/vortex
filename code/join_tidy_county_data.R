@@ -1,3 +1,7 @@
+
+# this script merges all the tidy county tables from all the source datasets
+
+
 #install.packages("dplyr","stringr", "rgdal", "raster", "rgeos")
 # merge county-level datasets into a single master table
 library(dplyr)
