@@ -1,5 +1,6 @@
 
-# This script .
+# This script converts the raw downloaded hurricane data into tidy county format,
+# first performing some spatial interpolation and deriving an exposure index.
 # Matthew Kling
 
 library(data.table)
@@ -14,11 +15,10 @@ library(maptools)
 library(ggplot2)
 library(viridis)
 
-### first, transform raw hurricane data into an R-readable csv format
-
 # read text file line-wise
 d <- readLines("raw_data/hurricane/hurdat2-1851-2015-021716.txt")
 
+# transform raw hurricane data into an R-readable csv format
 commas <- c()
 for(i in 1:length(d)){
       if(length(gregexpr(",", d[i])[[1]]) == 3){ # lines with only 3 commas are storm headers
@@ -28,16 +28,10 @@ for(i in 1:length(d)){
       }
       d[i] <- paste0(id, d[i]) # add the tag to every entry for that storm
 }
-
 d <- d[setdiff(1:length(d), commas)] # remove the storm header lines
-
-# write csv
 writeLines(d, "raw_data/hurricane/hurricanes_tabular.csv")
 
-
-### 
-
-# open and clean up data
+# clean up tabular data
 d <- fread("raw_data/hurricane/hurricanes_tabular.csv", header=F) %>%
       mutate(id=V1,
              date=V2,
@@ -57,7 +51,7 @@ bbox <- extent(-126, -59, 22, 53)
 counties <- crop(counties, bbox) # crop to US48
 counties$area <- gArea(counties, byid=T) # calculate area per county
 
-# crop to buffer around US extent
+# crop to buffer around US extent, to avoid unnecessary computation
 e <- extent(counties) * 1.1
 coordinates(d) <- c("lon", "lat")
 d <- crop(d, e)
@@ -94,50 +88,19 @@ coordinates(d) <- c("lon", "lat")
 crs(d) <- crs(counties)
 d <- crop(d, extent(counties))
 
-
 # tabulate weather events per county and join to shapefile data
-countify <- function(data){
-      
-      # spatial bookkeeping
-      #coordinates(data) <- c("deg_east", "deg_north")
-      #crs(data) <- crs(counties)
-      #data <- crop(data, bbox)
-      
-      # sumamrize events per county
-      o <- over(data, counties) %>%
+s <- data %>% 
+            over(counties) %>%
             cbind(data@data) %>%
             group_by(GEOID) %>%
             summarize(n_storms=n(),
-                      total_intensity=sum(windspeed^3))
-      
-      # join point and polygon datasets
-      data <- counties
-      data <- tidy(data, region="GEOID")
-      data <- left_join(data, o, by=c("id"="GEOID"))
-      return(data)
-}
+                      total_intensity=sum(windspeed^3),
+                      intensity_per_area=total_intensity/sum(area)) %>%
+            left_join(counties@data, .) %>%
+            mutate(state_fips=STATEFP, county_fips=COUNTYFP) %>%
+            dplyr::select(n_storms:county_fips)
 
-
-# map
-make_map <- function(f, weather){
-      png(paste0("output/charts/", weather, "_frequency_map.png"), width=3000, height=2000)
-      p <- ggplot(f, aes(long, lat, fill=total_intensity/area, group=group, order=order)) + 
-            geom_polygon(color=NA) +
-            scale_fill_viridis(option="A", na.value="black",
-                               trans="log10", breaks=10^(0:10)) +
-            theme(panel.background=element_blank(), panel.grid=element_blank(),
-                  axis.text=element_blank(), axis.title=element_blank(), axis.ticks=element_blank(),
-                  legend.position="top", text=element_text(size=40)) +
-            coord_map("stereographic") +
-            guides(fill=guide_colourbar(barwidth=50, barheight=3)) +
-            labs(fill=paste(weather, "intensity per unit area  "))
-      plot(p)
-      dev.off()
-}
-
-
-s <- countify(d)
+# export final tidy data
 write.csv(s, "output/tidy_county_data/hurricane.csv", row.names=F)
-make_map(s, "hurricane")
 
 
