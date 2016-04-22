@@ -1,4 +1,4 @@
-## THIS DIRECTORY CHANGES FIRE DATA FROM RASTER TO COUNTY SUMMARIES
+## THIS SCRIPT CHANGES FIRE DATA FROM RASTER LEVEL TO COUNTY LEVEL
 
 library(raster)
 library(rgdal)
@@ -51,10 +51,3 @@ names(States)[2] <- "county_fips"
 Fire_Risk_by_County <- States
 setwd("~/vortex/")
 write.csv(Fire_Risk_by_County, "output/tidy_county_data/Fire_risk_2014.csv", row.names=F)
-
-# plot a map
-#values <- "States$mean_risk" # the variable you want to map
-#values <- counties@data[,variable]
-#colors <- colorRampPalette(c("darkblue", "darkmagenta", "red", "yellow"))(100)[cut(values, breaks=100)]
-#colors[is.na(colors)] <- "darkblue" # what color to use for counties with no data -- set this to NA if you want them to be white
-#plot(counties, col=colors, axes=F, border=F)
