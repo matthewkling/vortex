@@ -1,8 +1,14 @@
+
+# TODO
+#     normalize relevant risk variables by county area
+
+
 library(dplyr)
 library(tidyr)
 library(maps)
 library(mapproj)
 library(stringr)
+select <- dplyr::select
 
 
 # load data
@@ -45,7 +51,7 @@ na2min <- function(x){
       x[is.na(x) | x<0] <- min(na.omit(x[x>=0]))
       return(x)
 }
-e <- mutate_each_(e, funs(na2min), names(e)[grepl("tot_intensity", names(e))]) %>%
+e <- mutate_each_(e, funs(na2min), names(e)[grepl("tot_intensity|risk_ind_sum", names(e))]) %>%
       mutate(population_density = TOTPOP/land_area,
              Income_Dollars = as.integer(as.character(sub(",", "", Income_Dollars))))
 
