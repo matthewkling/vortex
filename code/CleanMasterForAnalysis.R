@@ -86,6 +86,8 @@ socialdata$PercWh<- master_county_data$CensusRace...WA/master_county_data$Census
 socialdata$PercAs<- master_county_data$CensusRace...AA/master_county_data$CensusRace...TOT_POP
 socialdata$PercPIHI<- master_county_data$CensusRace...Na/master_county_data$CensusRace...TOT_POP
 socialdata$PercAI<- master_county_data$CensusRace...IA/master_county_data$CensusRace...TOT_POP
+socialdata$PercNHW<- master_county_data$CensusRace...NHW/master_county_data$CensusRace...TOT_POP
+
 
 write.csv(socialdata, 'output/master_county_data/cleanedsocial.csv', row.names=FALSE)
 write.csv(socialdata, 'shiny/app1/data/cleanedsocial.csv', row.names=FALSE)
