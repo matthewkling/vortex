@@ -5,7 +5,11 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                             includeMarkdown("text/intro.md"),
                             hr(),
                             br(),
-                            downloadButton("download_report", label="Download the report")
+                            fluidRow(
+                                  column(2, tags$a(class="btn btn-default", href="{https://github.com/matthewkling/vortex}", "Download the report")),
+                                  column(2, tags$a(class="btn btn-default", href="{https://github.com/matthewkling/vortex}", "Github repository"))
+                            )
+                            
                    ),
                    
                    tabPanel("explore correlations",
