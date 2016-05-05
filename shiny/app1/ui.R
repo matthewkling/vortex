@@ -38,7 +38,7 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                                   column(7,plotOutput("map"), height="600px")
                             ),
                             br(),
-                            br(),
+                            hr(),
                             includeMarkdown("text/explore_correlations.md")
                             
                    ),
@@ -70,7 +70,7 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                             ),
                             br(),
                             br(),
-                            includeMarkdown("text/explore_correlations.md")
+                            includeMarkdown("text/compare_groups.md")
                    )
                    
 ))
