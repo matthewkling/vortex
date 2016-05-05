@@ -73,7 +73,7 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                                   plotOutput("histogram", height="650px")
                             ),
                             br(),
-                            br(),
+                            hr(),
                             includeMarkdown("text/compare_groups.md")
                    )
                    

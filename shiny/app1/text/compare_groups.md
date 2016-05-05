@@ -1,1 +1,1 @@
-Explanation of how to use and interpret these charts.
+This visualization shows how population demographics differ in their natural distaster exposure. Select an environmental variable and two or more groups to compare the means (vertical lines) and frequency distributions (area histograms) of exposure among populations. 
