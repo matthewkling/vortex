@@ -1,7 +1,8 @@
+# This script merges the tidy county tables from all the source datasets.
+# Inputs: All csv files in the "tidy_county_data" folder
+# Output: "master_county_data.csv"
+# Author: Matthew Kling
 
-# this script merges all the tidy county tables from all the source datasets
-#install.packages("dplyr","stringr", "rgdal", "raster", "rgeos")
-# merge county-level datasets into a single master table
 library(dplyr)
 library(stringr)
 library(rgdal)
@@ -9,11 +10,10 @@ library(raster)
 library(rgeos)
 
 #load data
-
 files <- list.files('output/tidy_county_data', full.names=T)
 tables <- lapply(files, read.csv, stringsAsFactors=F)
 
-# build a combined state_county_fips variable in all tables that lack it
+# build a combined state_county_fips variable in tables that lack it
 tables <- lapply(tables, function(x){
       if(!'state_county_fips' %in% names(x)){
             x$state_county_fips <- paste0(str_pad(x$state_fips, 2, 'left', 0),
@@ -31,7 +31,7 @@ for(i in 1:length(tables)) names(tables[[i]])[!grepl('_fips', names(tables[[i]])
 # merge datasets
 master <- Reduce(full_join, tables)
 
-# add county area to table
+# add county land area to table
 counties <- readOGR('raw_data/census/us_counties_shapefile', 'cb_2014_us_county_500k')
 counties <- crop(counties, extent(-126, -59, 22, 53)) # crop to US48
 counties <- data.frame(state_county_fips=counties$GEOID,
