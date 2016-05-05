@@ -4,9 +4,8 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                    tabPanel("about",
                             includeMarkdown("text/intro.md"),
                             hr(),
-                            br(),
                             fluidRow(
-                                  column(2, tags$a(class="btn btn-default", href="{https://github.com/matthewkling/vortex}", "Download the report")),
+                                  column(2, tags$a(class="btn btn-default", href="{https://www.overleaf.com/4862930qgjwjv}", "Download the report")),
                                   column(2, tags$a(class="btn btn-default", href="{https://github.com/matthewkling/vortex}", "Github repository"))
                             )
                             
