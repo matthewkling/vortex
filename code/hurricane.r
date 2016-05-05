@@ -1,7 +1,8 @@
-
 # This script converts the raw downloaded hurricane data into tidy county format,
 # first performing some spatial interpolation and deriving an exposure index.
-# Matthew Kling
+# Input: raw NOAA hurricane data, hurdat2-1851-2015-021716.txt
+# Output: tidy county-wise hurricane exposure, hurricane.csv
+# Author: Matthew Kling
 
 library(data.table)
 library(dplyr)
@@ -29,7 +30,7 @@ for(i in 1:length(d)){
       d[i] <- paste0(id, d[i]) # add the tag to every entry for that storm
 }
 d <- d[setdiff(1:length(d), commas)] # remove the storm header lines
-writeLines(d, "raw_data/hurricane/hurricanes_tabular.csv")
+writeLines(d, "raw_data/hurricane/hurricanes_tabular.csv") # save intermediate file
 
 # clean up tabular data
 d <- fread("raw_data/hurricane/hurricanes_tabular.csv", header=F) %>%
