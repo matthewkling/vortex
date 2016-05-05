@@ -1,5 +1,9 @@
+# This script converts the raw downloaded tornado/hail/wind data into tidy county format.
+# Input: raw NOAA storms data (all csv files in the "raw_data/tornado_wind_hail" folder),
+          # and US counties shapefile
+# Output: tidy county-wise exposure tables: tornado.csv, hail.csv, wind.csv
+# Author: Matthew Kling
 
-# user-specific file paths -- each person should replicate for their machine, and define the user variable in the console before running
 
 # libraries
 library(dplyr)
@@ -15,7 +19,7 @@ library(viridis)
 
 ####### functions #######
 
-# load storms data
+# function to load storms data
 # metadata is at http://www.spc.noaa.gov/wcm/data/SPC_severe_database_description.pdf
 # column names are common to all weather types, but wind has an extra variable
 load_data <- function(path){
@@ -32,7 +36,7 @@ load_data <- function(path){
 }
 
 
-# tabulate weather events per county
+# function to tabulate weather events per county
 countify <- function(data){
       require(stringr)
       data <- data %>%
@@ -45,14 +49,14 @@ countify <- function(data){
       return(data)
 }
 
-# fill NA values with minimum valid value
+# function to fill NA values with minimum valid value
 na2min <- function(x){
       x$n_storms[is.na(x$n_storms)] <- 0
       x$total_intensity[is.na(x$total_intensity) | x$total_intensity<0] <- min(na.omit(x$total_intensity[x$total_intensity>=0]))
       return(x)
 }
 
-# make shapefile from county data table
+# function to make shapefile from county data table
 geojoin <- function(data, shapefile){
       #shapefile@data <- mutate_each(shapefile@data, funs(as.integer), STATEFP, COUNTYFP)
       shapefile@data <- left_join(shapefile@data, data, by=c("STATEFP"="state_fips", "COUNTYFP"="county_fips"))
@@ -60,7 +64,7 @@ geojoin <- function(data, shapefile){
 }
 
 
-# save simple maps
+# function to save some simple maps
 make_map <- function(weather){
       f <- d[[weather]]
       s <- tidy(f, region="GEOID")
