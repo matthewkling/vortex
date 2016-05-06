@@ -1,6 +1,6 @@
 
 *.DS_Store*
-.Rhistory
+*.Rhistory
 .DS_Store
 .gitignore
 raw_data/.DS_Store
