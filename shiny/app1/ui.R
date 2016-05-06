@@ -30,8 +30,10 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                                          h2(htmlOutput("title1"), align="left")
                                   ),
                                   column(2,
-                                         selectInput("xv", "X & Y variables", choices=vars$display, selected=vars$display[grepl("minority", vars$display)][1]),
-                                         selectInput("yv", NULL, choices=vars$display, selected=vars$display[grepl("tornado", vars$display)][1])
+                                         selectInput("xv", "X & Y variables", choices=vars$display, 
+                                                     selected=vars$display[grepl("black", vars$display)][1]),
+                                         selectInput("yv", NULL, choices=vars$display, 
+                                                     selected=vars$display[grepl("hurricane", vars$display)][1])
                                   ),
                                   column(2,
                                          selectInput("xscale", "X & Y scale transformations", choices=c("linear", "log10", "percentile"), selected="percentile"),
