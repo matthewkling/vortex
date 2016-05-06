@@ -3,6 +3,7 @@
 #setwd("vortex") #code will not run appropriately from another directory
 library(rio)
 
+download.file("http://www.ers.usda.gov/dataFiles/CountyLevelDatasets/PovertyEstimates.xls","raw_data/poverty_unemployment_med_income/PovertyEstimates.xls",method="curl")
 pov.raw <- import("raw_data/poverty_unemployment_med_income/PovertyEstimates.xls")
 
 pov <- pov.raw[-(1:(which(pov.raw[,1]=="FIPStxt")-1)),] #remove the rows above the column names, held comments from original excel file
