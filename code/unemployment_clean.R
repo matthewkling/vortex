@@ -3,6 +3,7 @@
 #setwd("vortex") #code will not run appropriately from another directory
 library(rio)
 
+download.file("http://www.ers.usda.gov/dataFiles/CountyLevelDatasets/Unemployment.xls","raw_data/poverty_unemployment_med_income/Unemployment.xls",method="curl")
 unem.raw <- import("raw_data/poverty_unemployment_med_income/Unemployment.xls")
 
 unem <- unem.raw[-(1:(which(unem.raw[,1]=="FIPS_Code")-1)),] #remove the rows above the column names, held comments from original excel file
