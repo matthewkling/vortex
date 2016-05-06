@@ -20,11 +20,25 @@ shinyServer(
             
             ### intro tab content ###
             
-            output$download_report <- downloadHandler(
-                  filename="",
-                  content=""
-            )
+            output$katrina <- renderImage({
+                  dims <- c(1919, 558)
+                  scale = .7
+                  list(src = "www/Katrina_Storm.jpg",
+                       contentType = 'image/jpg',
+                       width = dims[1]*scale,
+                       height = dims[2]*scale,
+                       alt = "Hurricane Katrina")
+            }, deleteFile = F)
             
+            output$workflow <- renderImage({
+                  dims <- c(960,540)
+                  scale = 1.3
+                  list(src = "www/workflow_diagram.png",
+                       contentType = 'image/png',
+                       width = dims[1]*scale,
+                       height = dims[2]*scale,
+                       alt = "Project workflow diagram")
+            }, deleteFile = F)
             
             ### explore correlations tab content ###
             
