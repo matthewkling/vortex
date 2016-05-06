@@ -1,6 +1,10 @@
 
 *.DS_Store*
+<<<<<<< HEAD
 *.Rhistory*
+=======
+*.Rhistory
+>>>>>>> dd811a92a379b5d72a3d282ec501d0792b1d4c75
 .DS_Store
 raw_data/.DS_Store
 raw_data/.DS_Store
