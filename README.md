@@ -11,4 +11,4 @@ Our pipeline is fully reproducible, and nearly every step is scripted, exception
 To reproduce this project, first, visit the forest fire directory under raw data and follow instructions in the readme to download, prepare, and clean fire data. This will take roughly 6-8 hours. After this step completes, please run the make file in the main directory with the following script from a BASH or UNIX shell: 'make'
 
 Note: You may need to install some dependencies and the following R libraries in order to execute the make command: rio, raster, data.table, 
-viridis, dplyr, tidyr, stringr, rgeos, rgdal, broom, maptools, ggplot2  
+viridis, dplyr, tidyr, stringr, rgeos, rgdal, broom, maptools, ggplot2, xlsx.  
