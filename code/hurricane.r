@@ -93,9 +93,9 @@ crs(d) <- crs(counties)
 d <- crop(d, extent(counties))
 
 # tabulate weather events per county and join to shapefile data
-s <- data %>% 
+s <- d %>% 
             over(counties) %>%
-            cbind(data@data) %>%
+            cbind(d@data) %>%
             group_by(GEOID) %>%
             summarize(n_storms=n(),
                       total_intensity=sum(windspeed^3),
