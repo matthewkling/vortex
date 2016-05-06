@@ -4,9 +4,9 @@
 library(rio) #used to import Excel files
 
 #####Downloading data from sources####
-download.file("http://www.bea.gov/newsreleases/regional/lapi/2015/xls/lapi1115.xls","raw_data/poverty_unemployment_med_income/lapi1115.xls",method="curl")
-download.file("http://www2.census.gov/geo/docs/reference/state.txt","raw_data/poverty_unemployment_med_income/state.txt")
-download.file("http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt","raw_data/poverty_unemployment_med_income/fips.csv")
+#download.file("http://www.bea.gov/newsreleases/regional/lapi/2015/xls/lapi1115.xls","raw_data/poverty_unemployment_med_income/lapi1115.xls",method="curl")
+#download.file("http://www2.census.gov/geo/docs/reference/state.txt","raw_data/poverty_unemployment_med_income/state.txt")
+#download.file("http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt","raw_data/poverty_unemployment_med_income/fips.csv")
 
 ####Make table of FIPS values####
 
@@ -245,3 +245,4 @@ per.cap <- fips.add[,categories]
 names(per.cap)[which(names(per.cap)=="per.cap.2014")] <- "Dollars"
 
 write.csv(per.cap,"output/tidy_county_data/incomelower48.csv",row.names=F) #writes out cleaned data; preserved original cleaned file and columns name
+
