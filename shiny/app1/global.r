@@ -14,7 +14,7 @@ select <- dplyr::select
 # load data
 ds <- read.csv("data/cleanedsocial.csv", stringsAsFactors=F) %>%
       mutate(fips = as.integer(paste0(state_fips, str_pad(county_fips, 3, "left", 0)))) %>%
-      select(-STNAME, -CTYNAME, -state_fips, -county_fips, -land_area)
+      select(-STNAME, -CTYNAME, -state_fips, -county_fips, -land_area, -Income_Dollars)
 
 dr <- read.csv("data/cleanedrisk.csv", stringsAsFactors=F) %>%
       #select(-land_area) %>%
@@ -52,8 +52,7 @@ na2min <- function(x){
       return(x)
 }
 e <- mutate_each_(e, funs(na2min), names(e)[grepl("tot_intensity|risk_ind_sum", names(e))]) %>%
-      mutate(population_density = TOTPOP/land_area,
-             Income_Dollars = as.integer(as.character(sub(",", "", Income_Dollars))))
+      mutate(population_density = TOTPOP/land_area)
 
 # variable names dictionary and translation functions
 vars <- read.csv("data/variable_names", stringsAsFactors=F) %>%

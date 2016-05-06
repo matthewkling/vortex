@@ -1,58 +1,11 @@
 Data was obtained from http://www.ers.usda.gov/data-products/natural-amenities-scale.aspx
-The file was converted to .csv format using excel.
+The file was converted to .csv and tidied up using R.  
 
-#############
-#In R, FIPS header names were changed to "state_county_fips" using the following code:
-#############
+The only data used in the final analyses was the "Natural Amenities Scale" and the associated FIPS codes. 
 
-library(data.table)
-natamen <- read.csv("raw_data/natural_amenities/natamenf.csv", skip=104)
-names(natamen)[1] <- "state_county_fips"
-names(natamen)
-write.csv(natamen,"raw_data/natural_amenities/natamenf_fips.csv")
+The following information was taken from the original data file as of May 6, 2016:
 
-
-#############
-#Files were then tidied up using the following R code:
-#############
-
-natamen_raw <- read.csv(("raw_data/natural_amenities/natamenf_fips.csv"));natamen_raw <- natamen_raw[,-1]
-
-natamen.clean <- subset(natamen_raw,select=c(state_county_fips,Scale))
-
-
-write.csv(natamen.clean,"output/tidy_county_data/natural_amenities.csv",row.names = F)
-
-#check <- read.csv("output/tidy_county_data/natural_amenities.csv")
-#head(check)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Natural Amenities Scale									
+"Natural Amenities Scale									
 									
 The Climatic data is from the Area Resource File (ARF). The ARF file is maintained by 									
 Quality Resource Systems (QRS) under contract to the Office of Research and Planning, Bureau of									
@@ -149,4 +102,4 @@ combined adjacent county.  There are 41 combined counties in this file.  Most of
 of these combination were the independent cities in Virginia. There  were also county									
 combinations in Arizona, Montana, and New Mexico.									
 									
-For more information on the natural amenity index, contact David McGranahan, DMcG@ers.usda.gov, (202) 694-5356.									
+For more information on the natural amenity index, contact David McGranahan, DMcG@ers.usda.gov, (202) 694-5356."							

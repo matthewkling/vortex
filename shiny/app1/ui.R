@@ -4,18 +4,15 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                    
                    tabPanel("about",
                             imageOutput("katrina"),
+                            hr(),
                             includeMarkdown("text/intro.md"),
                             hr(),
                             fluidRow(
                                   column(2, tags$a(class="btn btn-default", 
-                                                   href="https://preview.overleaf.com/public/fpdvkktnsrbz/pdfs/56f36d34c9e2fb3b8321d455f3f4354e48f556f2/demographics-disaster.pdf",
-                                                   "read the report")),
-                                  column(2, tags$a(class="btn btn-default", 
                                                    href="https://github.com/matthewkling/vortex", 
-                                                   "view github repository"))
+                                                   "View GitHub repository")),
+                                  column(2, downloadButton('report', 'Download the report'))
                             ),
-                            hr(),
-                            br(),
                             br(),
                             br(),
                             br(),
@@ -34,8 +31,10 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                                          h2(htmlOutput("title1"), align="left")
                                   ),
                                   column(2,
-                                         selectInput("xv", "X & Y variables", choices=vars$display, selected=vars$display[grepl("minority", vars$display)][1]),
-                                         selectInput("yv", NULL, choices=vars$display, selected=vars$display[grepl("tornado", vars$display)][1])
+                                         selectInput("xv", "X & Y variables", choices=vars$display, 
+                                                     selected=vars$display[grepl("black", vars$display)][1]),
+                                         selectInput("yv", NULL, choices=vars$display, 
+                                                     selected=vars$display[grepl("hurricane", vars$display)][1])
                                   ),
                                   column(2,
                                          selectInput("xscale", "X & Y scale transformations", choices=c("linear", "log10", "percentile"), selected="percentile"),
