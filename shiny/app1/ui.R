@@ -4,6 +4,7 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                    
                    tabPanel("about",
                             imageOutput("katrina"),
+                            hr(),
                             includeMarkdown("text/intro.md"),
                             hr(),
                             fluidRow(
