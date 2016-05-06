@@ -4,16 +4,12 @@
 library(rio) #used to import Excel files
 
 #####Downloading data from sources####
-#download.file("http://www.bea.gov/newsreleases/regional/lapi/2015/xls/lapi1115.xls","raw_data/poverty_unemployment_med_income/lapi1115.xls",method="curl")
-#download.file("http://www2.census.gov/geo/docs/reference/state.txt","raw_data/poverty_unemployment_med_income/state.txt")
-#download.file("http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt","raw_data/poverty_unemployment_med_income/fips.csv")
+download.file("http://www.bea.gov/newsreleases/regional/lapi/2015/xls/lapi1115.xls","raw_data/poverty_unemployment_med_income/lapi1115.xls",method="curl")
+state<-import("http://www2.census.gov/geo/docs/reference/state.txt", format="|")
+county<-import("https://www2.census.gov/geo/docs/reference/codes/files/national_county.txt", format=",")
 
 ####Make table of FIPS values####
-
-state <- read.table("raw_data/poverty_unemployment_med_income/state.txt",sep="|",header=T,colClasses = "character")
 state.abbrv <- subset(state,select = c(STUSAB,STATE_NAME) )
-
-county <- read.csv("raw_data/poverty_unemployment_med_income/fips.csv",colClasses = "character",header=F)
 names(county) <- c("STUSAB","state_fips","county_fips","county_name_full","fips_class")
 
 fips.table <- merge(state.abbrv,county,by="STUSAB")

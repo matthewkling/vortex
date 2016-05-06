@@ -95,8 +95,8 @@ download.file("http://www.spc.noaa.gov/wcm/data/1955-2015_wind.csv.zip",
               "raw_data/tornado_wind_hail/wind_raw.zip")
 download.file("http://www.spc.noaa.gov/wcm/data/1955-2015_hail.csv.zip",
               "raw_data/tornado_wind_hail/hail_raw.zip")
-unzip("raw_data/tornado_wind_hail/wind_raw.zip", exdir="raw_data/tornado_wind_hail/")
-unzip("raw_data/tornado_wind_hail/hail_raw.zip", exdir="raw_data/tornado_wind_hail/")
+unzip("raw_data/tornado_wind_hail/wind_raw.zip", exdir = "raw_data/tornado_wind_hail")
+unzip("raw_data/tornado_wind_hail/hail_raw.zip", exdir = "raw_data/tornado_wind_hail")
 
 
 # load weather event data
