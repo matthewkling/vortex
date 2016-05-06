@@ -40,6 +40,13 @@ shinyServer(
                        alt = "Project workflow diagram")
             }, deleteFile = F)
             
+            output$report <- downloadHandler(
+                  filename="demographics_of_disaster.pdf",
+                  content=function(file){
+                        file.copy("www/demographics-disaster.pdf", file)
+                  }
+            )
+            
             ### explore correlations tab content ###
             
             output$title1 <- renderUI({
