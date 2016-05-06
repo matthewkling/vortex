@@ -1,6 +1,6 @@
 
 shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"), 
-                   windowTitle="demographics of disaster",
+                   windowTitle="Demographics of Disaster",
                    
                    tabPanel("about",
                             imageOutput("katrina"),
@@ -10,9 +10,21 @@ shinyUI(navbarPage(strong("DEMOGRAPHICS of DISASTER"),
                                   column(2, tags$a(class="btn btn-default", 
                                                    href="https://preview.overleaf.com/public/fpdvkktnsrbz/pdfs/56f36d34c9e2fb3b8321d455f3f4354e48f556f2/demographics-disaster.pdf",
                                                    "read the report")),
-                                  column(2, tags$a(class="btn btn-default", href="https://github.com/matthewkling/vortex", "view github repository"))
+                                  column(2, tags$a(class="btn btn-default", 
+                                                   href="https://github.com/matthewkling/vortex", 
+                                                   "view github repository"))
                             ),
                             hr(),
+                            br(),
+                            br(),
+                            br(),
+                            br(),
+                            br(),
+                            br(),
+                            br(),
+                            br(),
+                            br(),
+                            br(),
                             imageOutput("workflow") 
                    ),
                    
