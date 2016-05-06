@@ -1,4 +1,4 @@
-PHONY.: masterdatafile cleanedtables
+PHONY.: download_clean_data masterdatafile cleanedtables
 
 all: output/master_county_data/master_county_data.csv output/master_county_data/cleanedsocial.csv output/master_county_data/cleanedrisk.csv
 
