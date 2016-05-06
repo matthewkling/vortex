@@ -38,6 +38,7 @@ load_data <- function(path){
 # function to tabulate weather events per county
 countify <- function(data){
       require(stringr)
+      names(data)[is.na(names(data))] <- "a"
       data <- data %>%
             mutate(state_fips = str_pad(state_fips, 2, "left", "0"),
                    county_fips = str_pad(county_fips_1, 3, "left", "0")) %>%
@@ -91,13 +92,16 @@ make_map <- function(weather){
 download.file("http://www.spc.noaa.gov/wcm/data/Actual_tornadoes.csv",
               "raw_data/tornado_wind_hail/tornado_raw.csv")
 download.file("http://www.spc.noaa.gov/wcm/data/1955-2015_wind.csv.zip",
-              "raw_data/tornado_wind_hail/wind_raw.csv")
+              "raw_data/tornado_wind_hail/wind_raw.zip")
 download.file("http://www.spc.noaa.gov/wcm/data/1955-2015_hail.csv.zip",
-              "raw_data/tornado_wind_hail/hail_raw.csv")
+              "raw_data/tornado_wind_hail/hail_raw.zip")
+unzip("raw_data/tornado_wind_hail/wind_raw.zip", exdir="raw_data/tornado_wind_hail/")
+unzip("raw_data/tornado_wind_hail/hail_raw.zip", exdir="raw_data/tornado_wind_hail/")
+
 
 # load weather event data
 files <- list.files("raw_data/tornado_wind_hail", pattern="\\.csv", full.names=T)
-names(files) <- c("hail", "tornado", "wind")
+names(files) <- c("hail", "wind", "tornado")
 
 # load US counties shapefile
 counties <- readOGR("raw_data/census/us_counties_shapefile", "cb_2014_us_county_500k")
