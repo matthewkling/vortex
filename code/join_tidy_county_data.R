@@ -16,8 +16,7 @@ tables <- lapply(files, read.csv, stringsAsFactors=F)
 # build a combined state_county_fips variable in tables that lack it
 tables <- lapply(tables, function(x){
       if(!'state_county_fips' %in% names(x)){
-            x$state_county_fips <- paste0(str_pad(x$state_fips, 2, 'left', 0),
-                                          str_pad(x$county_fips, 3, 'left', 0))
+            x$state_county_fips <- paste0(str_pad(x$state_fips, 2, 'left', 0), str_pad(x$county_fips, 3, 'left', 0))
       }else{
             x$state_county_fips <- str_pad(x$state_county_fips, 5, 'left', 0)
       }
