@@ -2,7 +2,7 @@
 
 These data come from NOAA's HURDAT2 database for the Atlantic region, and represent the tracks of every hurricane since 1851.
 
-The direct download link for the dataset is http://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2015-021716.txt
+Data are automatically downloaded when the hurricane.r script is run. The direct download link for the dataset is http://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2015-021716.txt
 
 Metadata can be found at http://www.nhc.noaa.gov/data/hurdat/hurdat2-format-atlantic.pdf
 
