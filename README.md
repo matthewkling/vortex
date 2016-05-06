@@ -2,8 +2,8 @@
 
 This repository contains all the code and data associated with a group class project for [Stat 259](http://gastonsanchez.com/stat259), a UC Berkeley course associated with the [Data Sciences for the 21st Century](http://ds421.berkeley.edu) program.
 
-Our final products include a [web app](https://matthewkling.shinyapps.io/demographics_of_disaster/) built with Shiny, and a [report] compiled with latex and 
-overleaf and found in the report folder. 
+Our final products include a [web app](https://matthewkling.shinyapps.io/demographics_of_disaster/) built with Shiny, and a report compiled with latex and 
+overleaf and found inside the report directory. 
 
 The project was motivated by a simple question: *how are US subpopulations differentially burdened by climate-related natural disasters?* By combining a number of socioeconomic and meteorological datasets into a flexible visualization framework, the Shiny app lets you explore various facets of this issue.
 
