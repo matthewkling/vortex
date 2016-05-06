@@ -1,6 +1,5 @@
-# This script converts the raw downloaded tornado/hail/wind data into tidy county format.
-# Input: raw NOAA storms data (all csv files in the "raw_data/tornado_wind_hail" folder),
-          # and US counties shapefile
+# This script downloads tornado/hail/wind data from NOAA and converts it into tidy county format.
+# Input: raw NOAA storms data and US counties shapefile
 # Output: tidy county-wise exposure tables: tornado.csv, hail.csv, wind.csv
 # Author: Matthew Kling
 
@@ -88,14 +87,22 @@ make_map <- function(weather){
 
 ######## data setup #########
 
+# download weather data
+download.file("http://www.spc.noaa.gov/wcm/data/Actual_tornadoes.csv",
+              "raw_data/tornado_wind_hail/tornado_raw.csv")
+download.file("http://www.spc.noaa.gov/wcm/data/1955-2015_wind.csv.zip",
+              "raw_data/tornado_wind_hail/wind_raw.csv")
+download.file("http://www.spc.noaa.gov/wcm/data/1955-2015_hail.csv.zip",
+              "raw_data/tornado_wind_hail/hail_raw.csv")
+
+# load weather event data
+files <- list.files("raw_data/tornado_wind_hail", pattern="\\.csv", full.names=T)
+names(files) <- c("hail", "tornado", "wind")
+
 # load US counties shapefile
 counties <- readOGR("raw_data/census/us_counties_shapefile", "cb_2014_us_county_500k")
 counties <- crop(counties, extent(-126, -59, 22, 53)) # crop to US48
 counties$area <- gArea(counties, byid=T) # calculate area per county
-
-# load weather event data
-files <- list.files("raw_data/tornado_wind_hail", pattern="\\.csv", full.names=T)
-names(files) <- c("tornado", "hail", "wind")
 
 
 
