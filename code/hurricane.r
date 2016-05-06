@@ -1,6 +1,6 @@
-# This script converts the raw downloaded hurricane data into tidy county format,
+# This script downloads raw hurricane data and converts it into tidy county format,
 # first performing some spatial interpolation and deriving an exposure index.
-# Input: raw NOAA hurricane data, hurdat2-1851-2015-021716.txt
+# Input: raw NOAA hurricane data, hurdat2-1851-2015-021716.txt, automatically downloaded when script is run
 # Output: tidy county-wise hurricane exposure, hurricane.csv
 # Author: Matthew Kling
 
@@ -15,6 +15,9 @@ library(broom)
 library(maptools)
 library(ggplot2)
 library(viridis)
+
+download.file("http://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2015-021716.txt", 
+              "raw_data/hurricane/hurdat2-1851-2015-021716.txt")
 
 # read text file line-wise
 d <- readLines("raw_data/hurricane/hurdat2-1851-2015-021716.txt")

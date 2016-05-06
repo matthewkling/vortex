@@ -8,20 +8,18 @@ library(dplyr)
 
 # load US counties shapefile
 counties <- readOGR("raw_data/census/us_counties_shapefile", "cb_2014_us_county_500k")
-# @data is just like a data frame
-head(counties@data) #like opening an attribute table, but doesn't have coordinates
+head(counties@data) 
 counties <- crop(counties, extent(-126, -59, 22, 53)) # crop to US48 using lat long, extent creates a box
 extent(counties) # shows you boundaries of counties in lat long
 counties$area <- gArea(counties, byid=T) # calculate area per county
 
-# THIS FILE PATH IS NOT WITHIN VORTEX BECAUSE UNZIPPING THIS LARGE OF A FILE WITHIN VORTEX CRASHES GIT
-setwd("C:/Users/Carmen/Desktop/whp_2014_classified/")
+setwd("raw_data/fire/whp_2014_classified/")
 r <- raster("whp2014_cls")
 
 # sync projections
 counties <- spTransform(counties, crs(r)) #better to change counties because transforming a grid degrades the data
-#r <- crop(r, counties) # time consuming and unnecessary 
 
+# the below for loop breaks apart the computation into states to make it manageable
 States <- data.frame()
 State.names <- unique(counties$STATEFP)
 for(i in State.names[1:49]) {
